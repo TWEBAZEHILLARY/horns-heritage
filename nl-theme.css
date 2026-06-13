@@ -1,0 +1,282 @@
+/* ============================================================================
+   nl-theme.css  —  "Nature Leaf" re-skin layer (teal + blush, image-extracted)
+   ----------------------------------------------------------------------------
+   Extracted from the reference (High Conversion Landing Page Design):
+     · Deep teal   #1C4B47  — hero, footer, primary buttons, headings accent
+     · Soft blush  #F4DFD6 / #EFC9BB — accent bands, product-card surfaces
+     · White       #FFFFFF  — page background
+     · Body font   Poppins (geometric sans)  ·  Headings keep an elegant serif
+
+   SAFETY / RECOVERABILITY
+   - EVERY rule is gated under  html[data-nl="on"]  so the whole layer can be
+     switched off by removing the data-nl flag or deleting this <link>; the
+     previous (Clean / Beauty) look returns untouched.
+   - Loaded LAST (after hh-beauty-2026.css) so it wins on source order; the gate
+     selector matches the specificity of the skin tokens it refines.
+   - NO content, prices, products, units, cart, checkout, login, membership or
+     WhatsApp markup is touched. Visual + Shop-grid layout only.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1 · PALETTE  —  re-token to teal / blush / white. Cascades into every
+   existing var() usage, so the whole site re-colours from these few lines.
+   --------------------------------------------------------------------------- */
+html[data-nl="on"] {
+  /* Surfaces — clean white + neutral grey + pale sage-mint (from reference) */
+  --bg-main:        #FFFFFF;   /* clean white page                          */
+  --bg-secondary:   #F4F6F3;   /* faint neutral-sage band                   */
+  --bg-alt:         #E4EBE5;   /* pale sage-mint accent band (cattle / cams)*/
+  --bg-card:        #FFFFFF;   /* white cards                               */
+  --bg-footer:      #28332C;   /* deep forest charcoal (footer + topbar)    */
+
+  /* Brand → sage-forest green family (buttons, tabs, tags, headings accents)*/
+  --primary-green:   #3C6E54;
+  --secondary-green: #4F7A62;
+  --accent-green:    #6E9079;
+
+  /* Secondary accents folded into the green family (reference is mono-green)*/
+  --terracotta:  #4A7C5E;
+  --rust:        #2F5A43;
+  --gold:        #6E8F74;
+  --gold-dark:   #566F5B;
+  --cream:       #F4F7F3;
+
+  /* Primary CTA (add-to-cart / checkout) → sage-forest green                */
+  --gold-cta:      #3C6E54;
+  --gold-cta-dark: #28503D;
+
+  /* Text — near-black + neutral greys                                       */
+  --text-primary:   #1D211E;   /* near-black                                */
+  --text-secondary: #5A615C;
+  --text-muted:     #969C97;
+  --text-on-dark:   #EEF1ED;
+
+  /* UI */
+  --border-soft:        #E6E8E4;
+  --shadow-card:        0 4px 16px rgba(34, 46, 38, 0.06);
+  --shadow-card-hover:  0 16px 36px rgba(34, 46, 38, 0.12);
+  --shadow-dropdown:    0 10px 28px rgba(34, 46, 38, 0.12);
+
+  /* Type — body switches to Poppins, headings keep the elegant serif        */
+  --sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html[data-nl="on"] body { background: var(--bg-main); font-family: var(--sans); }
+
+/* Nav: pure-white frosted bar over the new white page                       */
+html[data-nl="on"] .nav {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Primary CTAs (pill buttons) → solid teal, cream text                      */
+html[data-nl="on"] .btn-primary { background: var(--primary-green); color: var(--cream); }
+html[data-nl="on"] .btn-primary:hover { background: var(--gold-cta-dark); color: var(--cream); }
+
+/* Add-to-cart / checkout were forced to brown text on gold by an earlier
+   layer; re-point to teal + cream so the reference's dark CTA reads right.   */
+html[data-nl="on"] .add-to-cart,
+html[data-nl="on"] .cart-checkout,
+html[data-nl="on"] .hh-modal-add {
+  background: var(--gold-cta) !important;
+  color: var(--cream) !important;
+}
+html[data-nl="on"] .add-to-cart:hover,
+html[data-nl="on"] .cart-checkout:hover,
+html[data-nl="on"] .hh-modal-add:hover {
+  background: var(--gold-cta-dark) !important;
+  color: var(--cream) !important;
+}
+html[data-nl="on"] .add-to-cart.added,
+html[data-nl="on"] .hh-modal-add.added {
+  background: var(--gold) !important;
+  color: #2a2417 !important;
+}
+
+/* Active shop filter pill → teal (beauty skin used --primary-green already,
+   now teal via the token; nothing extra needed, but keep hover crisp)       */
+html[data-nl="on"] #shop-tabs .tab.active {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: #fff;
+}
+
+/* ===========================================================================
+   2 · SHOP PAGE — "Our Products" card format (image · name · Quick View)
+   Scoped strictly to #shop so the Buy/Sell cattle grid is untouched.
+   The price / rating / description / unit picker / add-to-cart all stay in the
+   DOM (hidden) — the Quick View popup still reads them, so nothing breaks.
+   =========================================================================== */
+
+/* 4 cols desktop · 2 tablet · 1 mobile */
+html[data-nl="on"] #shop .product-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+}
+@media (max-width: 980px) {
+  html[data-nl="on"] #shop .product-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  html[data-nl="on"] #shop .product-grid { grid-template-columns: 1fr; }
+}
+
+/* Card → blush tile, image + name + Quick View only */
+html[data-nl="on"] #shop .product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  padding: 12px 12px 6px;
+  overflow: visible;
+  text-align: center;
+  cursor: pointer;
+}
+html[data-nl="on"] #shop .product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(60, 110, 84, 0.20);
+}
+
+/* Image becomes a soft-blush rounded panel with the photo floating in it */
+html[data-nl="on"] #shop .product-img {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 50% 0%, #EEF4EC 0%, #DCE9DC 100%);
+}
+html[data-nl="on"] #shop .product-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* Hide everything the reference card omits — they remain in the DOM so the
+   Quick View popup can still surface price / unit / description / Add to Cart */
+html[data-nl="on"] #shop .product-img .tag,
+html[data-nl="on"] #shop .product-body .desc,
+html[data-nl="on"] #shop .product-body .product-meta,
+html[data-nl="on"] #shop .product-body .unit-pick,
+html[data-nl="on"] #shop .product-card .add-to-cart {
+  display: none !important;
+}
+
+/* Product body → just the name, centered, teal serif (as in the reference) */
+html[data-nl="on"] #shop .product-body {
+  padding: 14px 8px 10px;
+  display: block;
+}
+html[data-nl="on"] #shop .product-body h3 {
+  font-family: var(--serif);
+  color: var(--primary-green);
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0;
+}
+
+/* Quick View button — teal pill on the image, exactly as the reference */
+html[data-nl="on"] .nl-quickview {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--primary-green);
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(28, 55, 40, 0.32);
+  opacity: 0.96;
+  transition: background .2s ease, transform .2s ease, opacity .2s ease;
+  z-index: 3;
+  min-height: 0;
+}
+html[data-nl="on"] .nl-quickview svg { width: 15px; height: 15px; flex: 0 0 auto; }
+html[data-nl="on"] #shop .product-card:hover .nl-quickview {
+  background: var(--gold-cta-dark);
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Decorative "save" heart, top-right (cosmetic only — no data, no cart) */
+html[data-nl="on"] .nl-fav {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 8px rgba(34, 46, 38, 0.14);
+  color: #4A7C5E;
+  z-index: 3;
+  transition: transform .15s ease, background .2s ease;
+}
+html[data-nl="on"] .nl-fav svg { width: 16px; height: 16px; }
+html[data-nl="on"] .nl-fav:hover { transform: scale(1.08); }
+html[data-nl="on"] .nl-fav.is-active { color: #fff; background: #4A7C5E; }
+html[data-nl="on"] .nl-fav.is-active svg { fill: currentColor; }
+
+/* On touch screens the earlier layer shrank in-card type; with the new
+   minimal card we want the name comfortably readable instead. */
+@media (max-width: 560px) {
+  html[data-nl="on"] #shop .product-body h3 { font-size: 1.1rem; }
+}
+
+/* ===========================================================================
+   3 · HOMEPAGE HERO — make the cattle video clear & vibrant
+   Drop the heavy parchment veil; keep only a soft white halo behind the
+   centered text. Brighten the video itself slightly.
+   =========================================================================== */
+html[data-nl="on"] section.hero .hero-video {
+  filter: brightness(1.08) contrast(1.05) saturate(1.08);
+}
+
+html[data-nl="on"] section.hero .hero-scrim,
+html[data-nl="on"][data-hero] section.hero .hero-scrim,
+html[data-nl="on"][data-hero="1"] section.hero .hero-scrim,
+html[data-nl="on"][data-hero="2"] section.hero .hero-scrim,
+html[data-nl="on"][data-hero="3"] section.hero .hero-scrim {
+  background:
+    radial-gradient(ellipse 76% 86% at 50% 52%,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.48) 38%,
+      rgba(255, 255, 255, 0.14) 70%,
+      rgba(255, 255, 255, 0.00) 100%) !important;
+}
+@media (max-width: 900px) {
+  html[data-nl="on"] section.hero .hero-scrim,
+  html[data-nl="on"][data-hero] section.hero .hero-scrim {
+    background:
+      linear-gradient(180deg,
+        rgba(255, 255, 255, 0.62) 0%,
+        rgba(255, 255, 255, 0.42) 55%,
+        rgba(255, 255, 255, 0.66) 100%) !important;
+  }
+}
+
+/* Keep the hero copy readable on the now-clearer video: deep teal text with a
+   crisp light halo (overrides the earlier bright-layer colours). */
+html[data-nl="on"] section.hero h1 {
+  color: #1D3A2C !important;
+  text-shadow:
+    0 1px 16px rgba(255, 255, 255, 0.85),
+    0 1px 4px  rgba(255, 255, 255, 0.95) !important;
+}
+html[data-nl="on"] section.hero h1 em { color: #4A7C5E !important; }
+html[data-nl="on"] section.hero p.lede {
+  color: #233A30 !important;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Section background bands inherit the new tokens automatically (white /
+   blush). Ensure the divider dots pick up the blush/teal rhythm cleanly. */
+html[data-nl="on"] .strip { background: var(--bg-alt); }

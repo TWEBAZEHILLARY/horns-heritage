@@ -1,0 +1,402 @@
+/* ==========================================================================
+   F-PATTERN RESTRUCTURE LAYER
+   Overrides existing layout — sections become alternating zigzag with
+   sticky-pin storytelling, refined type hierarchy, and split hero.
+   No content removed; only layout/visual rules added on top.
+   ========================================================================== */
+
+/* ------- 1. Root tweaks: refined type scale ------- */
+:root{
+  --fp-display: clamp(2.6rem, 5.4vw, 4.8rem);
+  --fp-h2:      clamp(2rem, 3.6vw, 3.2rem);
+  --fp-h3:      clamp(1.35rem, 1.9vw, 1.7rem);
+  --fp-body:    1.025rem;
+  --fp-eyebrow: .68rem;
+  --fp-meta:    .73rem;
+  --fp-track-tight: -.018em;
+  --fp-track-wide:  .14em;
+  --fp-leading: 1.62;
+  --fp-rail-w:  92px;            /* sticky category-rail width on desktop */
+  --fp-gap:     clamp(2rem, 5vw, 5rem);
+  --fp-line:    rgba(212,168,32,.18);
+}
+
+/* ------- 2. Hero: split layout (video left, content right) ------- */
+body #hero{
+  min-height: 100vh;
+  position: relative;
+}
+body #hero .hero-body{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 9rem 4vw 6rem;
+  gap: clamp(2rem, 5vw, 5rem);
+  height: auto !important;
+}
+body #hero .hero-body > *{ grid-column: 2; }    /* push everything right */
+body #hero .hero-eyebrow,
+body #hero .hero-kente-bar,
+body #hero .hero-h,
+body #hero .hero-runy,
+body #hero .hero-sub,
+body #hero .hero-quote,
+body #hero .hero-email-bar,
+body #hero .hero-email-sub,
+body #hero .hero-btns,
+body #hero .hero-stats{
+  max-width: 580px;
+}
+body #hero .hero-h{
+  font-size: var(--fp-display) !important;
+  letter-spacing: var(--fp-track-tight);
+  line-height: 1.04;
+  text-wrap: balance;
+}
+/* Strip any logo SVG injected into the hero headline (per request) */
+body #hero .hero-h svg,
+body #hero .hero-h img,
+body #hero .hero-h .hh-mark,
+body #hero h1 svg,
+body #hero h1 .hh-mark{ display:none !important; }
+
+/* Video stays full-bleed but gains a left-vignette so the content side is readable */
+body #hero #hero-video{ object-position: 25% 35% !important; }
+body #hero::after{
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:
+    linear-gradient(90deg, rgba(8,6,4,.92) 0%, rgba(8,6,4,.55) 35%, rgba(8,6,4,.15) 55%, rgba(8,6,4,.55) 80%, rgba(8,6,4,.85) 100%);
+}
+body #hero .hero-body{ z-index: 5; }
+
+/* Decorative left "scroll" anchor */
+.fp-hero-anchor{
+  position:absolute; left:4vw; bottom:6rem; z-index:5;
+  display:flex; flex-direction:column; gap:.7rem;
+  font-family:'Outfit',sans-serif; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase;
+  color: rgba(255,255,255,.6); writing-mode: vertical-rl;
+}
+.fp-hero-anchor::before{
+  content:''; width:1px; height:80px;
+  background: linear-gradient(180deg, transparent, rgba(212,168,32,.7), transparent);
+  margin-bottom:.4rem;
+  writing-mode: horizontal-tb;
+}
+
+@media (max-width: 980px){
+  body #hero .hero-body{ grid-template-columns: 1fr; padding: 8rem 1.5rem 3rem; }
+  body #hero .hero-body > *{ grid-column: 1; }
+  .fp-hero-anchor{ display:none; }
+}
+
+/* ------- 3. Sticky category strip: stays under nav while scrolling ------- */
+body .csw{
+  position: sticky;
+  top: 98px;             /* below announce + nav */
+  z-index: 250;
+  background: rgba(8,6,4,.94);
+  backdrop-filter: blur(18px) saturate(1.3);
+  border-top: 1px solid var(--fp-line);
+  border-bottom: 1px solid var(--fp-line);
+  transition: top .25s, padding .25s;
+}
+body .csw.fp-pinned{
+  top: 30px;             /* nav hides on scroll → strip rises */
+}
+body .cs{ padding: .8rem 0; gap: .35rem; }
+body .cp{
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem 1rem;
+  border: 1px solid transparent;
+  transition: all .2s;
+}
+body .cp.active{
+  background: rgba(232,100,26,.16);
+  border-color: rgba(232,100,26,.45);
+  color: var(--gold2);
+}
+
+/* ------- 4. F-PATTERN section template ------- */
+/* Section wrapping: each .csec/.bsec/.hsec/.gsec/.esec/.ssec/.msec/.wasec/.tsec/.bsec2/.shop-sec/.camsec
+   becomes a 2-col F-row. We zebra them via :nth-of-type. */
+.fp-fsec{
+  position: relative;
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 4vw, 4rem);
+}
+.fp-fsec .fp-row{
+  display: grid;
+  grid-template-columns: minmax(0,5fr) minmax(0,7fr);
+  gap: var(--fp-gap);
+  align-items: center;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+.fp-fsec.fp-flip .fp-row{
+  grid-template-columns: minmax(0,7fr) minmax(0,5fr);
+}
+.fp-fsec.fp-flip .fp-row > .fp-text{ order: 2; }
+.fp-fsec.fp-flip .fp-row > .fp-media{ order: 1; }
+
+/* The text column (the "F-stem") */
+.fp-text{ position: relative; }
+.fp-text::before{                  /* hairline F-stem indicator */
+  content: '';
+  position: absolute;
+  left: -28px; top: 6px; bottom: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+  opacity: .55;
+}
+.fp-fsec.fp-flip .fp-text::before{
+  left: auto; right: -28px;
+  background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+}
+.fp-text .fp-eyebrow{
+  font-family:'Outfit',sans-serif;
+  font-size: var(--fp-eyebrow);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.1rem;
+  display: inline-flex; align-items:center; gap:.6rem;
+}
+.fp-text .fp-eyebrow::before{
+  content:''; width:24px; height:1px; background: var(--gold);
+}
+.fp-text h2,
+.fp-text .st{
+  font-size: var(--fp-h2) !important;
+  line-height: 1.05 !important;
+  letter-spacing: var(--fp-track-tight) !important;
+  text-wrap: balance;
+  margin-bottom: 1.1rem;
+}
+
+/* The media column (the "F-bar"): sticky-pin until next section starts */
+.fp-media{
+  position: relative;
+}
+.fp-media .fp-pin{
+  position: sticky;
+  top: 170px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,.55);
+}
+.fp-media .fp-pin::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  border:1px solid rgba(212,168,32,.14);
+}
+
+/* Tiny floating index/number that anchors each row */
+.fp-num{
+  font-family:'Cinzel',serif;
+  font-size: .85rem;
+  color: var(--gold);
+  letter-spacing: .35em;
+  margin-bottom: 1.1rem;
+  display: inline-block;
+  opacity: .6;
+}
+
+@media (max-width: 980px){
+  .fp-fsec .fp-row,
+  .fp-fsec.fp-flip .fp-row{ grid-template-columns: 1fr; }
+  .fp-text::before, .fp-fsec.fp-flip .fp-text::before{ display:none; }
+  .fp-fsec.fp-flip .fp-row > .fp-text{ order: 0; }
+  .fp-fsec.fp-flip .fp-row > .fp-media{ order: 0; }
+}
+
+/* ------- 5. Section background tone alternation ------- */
+.fp-fsec{ background: var(--obsidian); }
+.fp-fsec.fp-tone-a{ background: linear-gradient(180deg, #0d0a06, #120e08); }
+.fp-fsec.fp-tone-b{ background: linear-gradient(180deg, #120e08, #1a1109); }
+.fp-fsec + .fp-fsec{
+  border-top: 1px solid rgba(212,168,32,.08);
+}
+
+/* ------- 6. Reveal animations + scroll-driven scrubbing ------- */
+.fp-reveal{ opacity: 0; transform: translateY(40px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.fp-reveal.fp-in{ opacity: 1; transform: translateY(0); }
+.fp-reveal.fp-d1{ transition-delay: .12s; }
+.fp-reveal.fp-d2{ transition-delay: .22s; }
+.fp-reveal.fp-d3{ transition-delay: .32s; }
+
+/* Cinematic image scrubbing */
+.fp-pin img{ transition: transform .9s ease, filter .9s; transform: scale(1.04); }
+.fp-pin.fp-active img{ transform: scale(1); filter: saturate(1.05) contrast(1.04); }
+
+/* ------- 7. Product card refresh inside shop ------- */
+body .pc{
+  border:1px solid rgba(212,168,32,.12);
+  background: rgba(18,14,8,.55);
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+}
+body .pc:hover{
+  transform: translateY(-4px);
+  border-color: rgba(232,100,26,.45);
+  box-shadow: 0 30px 60px rgba(0,0,0,.45);
+}
+body .pc .ab{
+  width: auto; padding: .7rem 1.1rem; font-weight:600;
+  letter-spacing:.1em;
+  background: linear-gradient(135deg, var(--ember), var(--burnt));
+  border:none;
+  transition: transform .15s, filter .15s;
+}
+body .pc .ab:hover{ filter: brightness(1.15); transform: scale(1.04); }
+
+/* Quick-add overlay (appears on card hover) */
+.fp-quickadd{
+  position:absolute; inset: auto 12px 64px 12px;
+  display:flex; gap:.4rem; opacity:0; transform: translateY(8px);
+  transition: opacity .25s, transform .25s; pointer-events:none;
+  z-index: 4;
+}
+body .pc:hover .fp-quickadd{ opacity:1; transform: translateY(0); pointer-events:auto; }
+.fp-quickadd button{
+  flex:1; background: rgba(8,6,4,.92);
+  border: 1px solid rgba(212,168,32,.4); color: var(--gold);
+  padding: .55rem .6rem; font-family:'Outfit',sans-serif;
+  font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  cursor:pointer; transition: all .15s; backdrop-filter: blur(8px);
+}
+.fp-quickadd button:hover{ background: var(--gold); color: var(--obsidian); }
+
+/* ------- 8. Media Library Admin Panel ------- */
+.fp-ml-fab{
+  position: fixed; bottom: 18px; right: 18px; z-index: 2147483550;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ember), var(--gold));
+  color: var(--obsidian); border: none;
+  font-size: 1.4rem; cursor: pointer;
+  box-shadow: 0 16px 40px rgba(0,0,0,.6), 0 2px 6px rgba(232,100,26,.3);
+  transition: transform .2s, box-shadow .2s;
+  display: flex; align-items:center; justify-content:center;
+}
+.fp-ml-fab:hover{ transform: translateY(-2px) scale(1.05); }
+.fp-ml-fab.fp-open{ background: var(--obsidian); color: var(--gold); border:1px solid var(--gold); }
+
+.fp-ml{
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 96vw);
+  background: rgba(8,6,4,.98);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(212,168,32,.3);
+  z-index: 2147483540;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.2,.7,.2,1);
+  font-family:'Outfit',sans-serif; color: var(--cream);
+  box-shadow: -30px 0 80px rgba(0,0,0,.6);
+}
+.fp-ml.fp-open{ transform: translateX(0); }
+.fp-ml-head{
+  padding: 1.4rem 1.6rem 1rem; border-bottom: 1px solid rgba(212,168,32,.2);
+  display:flex; align-items:center; justify-content:space-between; gap: 1rem;
+}
+.fp-ml-head h3{
+  font-family:'Cinzel',serif; color: var(--gold);
+  font-size: 1.05rem; letter-spacing: .12em; text-transform: uppercase;
+  margin:0;
+}
+.fp-ml-head .fp-ml-close{
+  background: none; border: 1px solid rgba(212,168,32,.3); color: var(--cream);
+  padding: .35rem .6rem; cursor:pointer; border-radius:4px; font-size:.8rem;
+}
+.fp-ml-actions{
+  padding: .8rem 1.6rem;
+  display:flex; gap:.5rem; flex-wrap:wrap;
+  border-bottom: 1px solid rgba(212,168,32,.12);
+  font-size:.7rem;
+}
+.fp-ml-actions input{
+  flex: 1 1 100%;
+  background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+  color: var(--cream); padding: .55rem .8rem; border-radius:4px;
+  font-family: inherit; font-size:.75rem;
+}
+.fp-ml-actions button{
+  background: rgba(212,168,32,.15); border: 1px solid rgba(212,168,32,.4);
+  color: var(--gold); padding: .5rem .9rem; cursor:pointer; border-radius:4px;
+  font-family:inherit; font-size:.65rem; letter-spacing:.14em; text-transform:uppercase;
+  transition: all .15s;
+}
+.fp-ml-actions button:hover{ background: var(--gold); color: var(--obsidian); }
+.fp-ml-list{
+  flex: 1; overflow-y: auto; padding: .8rem 1.6rem 1.6rem;
+}
+.fp-ml-list::-webkit-scrollbar{ width:6px; }
+.fp-ml-list::-webkit-scrollbar-thumb{ background: rgba(212,168,32,.3); border-radius:3px; }
+.fp-mli{
+  display: grid; grid-template-columns: 80px 1fr auto;
+  gap: .9rem; align-items: center;
+  padding: .7rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.fp-mli .fp-thumb{
+  width: 80px; height: 60px; border-radius: 4px;
+  background: rgba(255,255,255,.06); object-fit: cover;
+  border: 1px solid rgba(212,168,32,.15);
+}
+.fp-mli .fp-info{ min-width: 0; }
+.fp-mli .fp-label{
+  font-size: .78rem; color: var(--cream);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fp-mli .fp-loc{
+  font-size: .62rem; color: rgba(255,255,255,.45);
+  letter-spacing: .12em; text-transform: uppercase; margin-top:.15rem;
+}
+.fp-mli button{
+  background: rgba(232,100,26,.15); border: 1px solid rgba(232,100,26,.4);
+  color: var(--gold2); padding: .45rem .7rem; cursor:pointer; border-radius:4px;
+  font-family:inherit; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  transition: all .15s;
+}
+.fp-mli button:hover{ background: var(--ember); color:#fff; border-color:var(--ember); }
+
+.fp-mli.fp-highlight{ outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* Floating "highlight target" indicator on the page */
+.fp-target-pulse{
+  outline: 3px solid var(--gold) !important;
+  outline-offset: 4px !important;
+  animation: fpPulse 1.2s ease infinite;
+}
+@keyframes fpPulse{
+  0%, 100%{ outline-color: var(--gold); }
+  50%{ outline-color: var(--ember); }
+}
+
+/* ------- 9. Section transitions: cinematic edge ------- */
+.fp-fsec::before{
+  content:''; position:absolute; left:0; right:0; top:0; height:2px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,32,.4), transparent);
+  opacity: 0; transition: opacity .8s;
+}
+.fp-fsec.fp-in::before{ opacity: 1; }
+
+/* Refined eyebrow style globally on existing eyebrows */
+body .eyebrow{
+  font-family:'Outfit',sans-serif !important;
+  font-size: var(--fp-eyebrow) !important;
+  letter-spacing: .22em !important;
+}
+
+/* ------- 10. Toast for media library actions ------- */
+.fp-toast{
+  position: fixed; bottom: 90px; right: 90px; z-index: 2147483560;
+  background: rgba(26,61,30,.97); color: var(--gold2);
+  padding: .8rem 1.4rem; border-radius: 999px;
+  font-family:'Outfit',sans-serif; font-size:.72rem; letter-spacing:.1em;
+  text-transform: uppercase; border:1px solid rgba(212,168,32,.4);
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+  opacity:0; transform: translateY(8px); transition: all .25s; pointer-events:none;
+}
+.fp-toast.fp-show{ opacity:1; transform: translateY(0); }
+.fp-toast.fp-warn{ background: rgba(122,46,14,.97); color:#fff; }

@@ -1,0 +1,171 @@
+/* ════════════════════════════════════════════════════════════════
+   HORNS & HERITAGE — Checkout "fits in one viewport"
+   Additive only. Loads LAST. Compresses the Payment & delivery modal
+   so the whole flow (summary, payment, delivery, total, confirm)
+   sits within ~700–800px of height without page-scroll.
+   No content, prices, products, photos, or copy are changed here.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Slightly narrower shell + a sane height cap so it never overflows the
+   viewport. Internal compression below keeps it well under this. */
+.hh-modal-overlay { padding: 16px; }
+.hh-modal:has(.co-checkout) {
+  width: min(760px, 100%);
+  max-height: 94vh;
+}
+
+/* ---------- Left intro panel: tighter ---------- */
+.co-checkout .co-aside { padding: 16px 18px; }
+.co-checkout .co-aside .eyebrow { margin-bottom: 8px; }
+.co-checkout .co-aside h3 {
+  font-size: 1.05rem;       /* ~16–17px heading */
+  line-height: 1.16;
+  margin: 0 0 7px;
+}
+.co-checkout .co-aside p {
+  font-size: 0.8rem;        /* ~13px body */
+  line-height: 1.42;
+}
+
+/* ---------- Right content column: tighter ---------- */
+.co-checkout .co-main { padding: 16px 18px 18px; }
+.co-checkout .co-sec-label {
+  font-size: 0.66rem;
+  margin: 11px 0 6px;
+}
+
+/* guest login banner — compact */
+.co-checkout .co-login-note {
+  padding: 8px 11px;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  line-height: 1.38;
+  border-radius: 11px;
+}
+
+/* ---------- Order summary: line items scroll past ~4 rows ---------- */
+.co-checkout .co-summary {
+  padding: 10px 14px;
+  margin-bottom: 2px;
+}
+.co-checkout .co-summary .co-lines {
+  max-height: 150px;
+  overflow-y: auto;
+  /* room for the scrollbar so numbers don't sit under it */
+  padding-right: 2px;
+}
+.co-checkout .co-summary .co-line {
+  font-size: 0.84rem;       /* ~13px */
+  padding: 2px 0;
+}
+.co-checkout .co-summary .co-tot {
+  font-size: 1rem;
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+/* ---------- Payment methods: compact two-up row ---------- */
+.co-checkout .pay-methods {
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.co-checkout .pay-method {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 9px 11px;
+  gap: 9px;
+  border-radius: 12px;
+}
+.co-checkout .pay-method input { width: 15px; height: 15px; flex: 0 0 auto; }
+.co-checkout .pay-method .pm-logo {
+  width: 34px; height: 34px;
+  font-size: 0.6rem;
+  border-radius: 8px;
+}
+.co-checkout .pay-method .pm-info { min-width: 0; }
+.co-checkout .pay-method .pm-info strong { font-size: 0.82rem; line-height: 1.2; }
+.co-checkout .pay-method .pm-info span { font-size: 0.74rem; }
+
+/* ---------- Delivery fields: compact but legible (≥ ~13px) ---------- */
+.co-checkout .hh-field { margin-bottom: 8px; gap: 4px; }
+.co-checkout .hh-field label { font-size: 0.77rem; }
+.co-checkout .hh-field input {
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
+.co-checkout .hh-form-row { gap: 10px; }
+.co-checkout .hh-field.err, .co-checkout #payErr { min-height: 0; margin-bottom: 0; }
+
+.co-checkout .hh-btn-full {
+  padding: 11px;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+.co-checkout form small.switch {
+  margin-top: 7px;
+  font-size: 0.74rem;
+}
+
+/* ---------- Mobile: stack payment cards + keep everything legible ---------- */
+@media (max-width: 560px) {
+  .co-checkout .pay-methods { flex-direction: column; }
+  .co-checkout .co-summary .co-lines { max-height: 130px; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Checkout popup — scroll WHEN content is taller than the viewport.
+   The modal shell (.hh-modal) is overflow:hidden + max-height:94vh, so
+   tall checkout content was getting clipped. Make the checkout container
+   itself the scroll region: nothing gets cut off, the page behind stays
+   put (overscroll-behavior:contain), and the close button — pinned to
+   .hh-modal — stays fixed while the contents scroll. No element order,
+   size, or visibility is changed. Additive only.
+   ════════════════════════════════════════════════════════════════ */
+.co-checkout {
+  max-height: 94vh;          /* mirrors .hh-modal:has(.co-checkout) */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;   /* momentum scroll on iOS */
+  /* thin, subtle scrollbar (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(45, 106, 79, 0.35) transparent;
+}
+/* thin, subtle scrollbar (WebKit/Chromium) */
+.co-checkout::-webkit-scrollbar { width: 8px; }
+.co-checkout::-webkit-scrollbar-track { background: transparent; }
+.co-checkout::-webkit-scrollbar-thumb {
+  background: rgba(45, 106, 79, 0.3);
+  border-radius: 8px;
+}
+.co-checkout::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 106, 79, 0.5);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DESKTOP (≥1024px) — scrollbar position fix.
+   The product-popup stylesheet sets `.hh-modal { display:grid;
+   grid-template-columns:1.02fr 1fr }`, which also matched the CHECKOUT
+   modal shell. That squeezed .co-checkout into the left grid column
+   (~half width) and floated its vertical scrollbar in the MIDDLE of the
+   container, leaving an empty column on the right.
+   Fix: on desktop only, make the checkout shell a normal block so
+   .co-checkout fills the full width and its scrollbar sits flush at the
+   far-right edge. Mobile/tablet are untouched (the popup grid already
+   collapses to one column ≤720px, so they were always correct).
+   Additive only — no content, copy, prices, colours, or fonts change.
+   ════════════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .hh-modal:has(.co-checkout) {
+    display: block;
+    grid-template-columns: none;
+  }
+  .co-checkout {
+    direction: ltr;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}

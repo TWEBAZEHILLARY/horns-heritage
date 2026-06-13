@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD Setup - GitHub Secrets Configuration</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: 'Poppins', system-ui, sans-serif; 
+    background: linear-gradient(135deg, #3C6E54 0%, #5C7B66 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+  
+  .header {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .header h1 { color: #3C6E54; font-size: 32px; margin-bottom: 8px; }
+  .header p { color: #5A615C; font-size: 16px; }
+  
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .card h2 { color: #3C6E54; font-size: 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  
+  .step {
+    background: #F4F5F2;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid #3C6E54;
+  }
+  
+  .step h3 { color: #3C6E54; font-size: 16px; margin-bottom: 12px; }
+  .step p { color: #5A615C; line-height: 1.6; margin-bottom: 8px; font-size: 14px; }
+  .step ol { margin-left: 20px; color: #5A615C; font-size: 14px; }
+  .step li { margin-bottom: 8px; line-height: 1.5; }
+  
+  .code-block {
+    background: #1D211E;
+    color: #F4F7F3;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin: 12px 0;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  
+  .highlight { background: #FFF3CD; padding: 4px 8px; border-radius: 3px; font-weight: 600; }
+  .success { color: #155724; background: #D4EDDA; padding: 4px 8px; border-radius: 3px; }
+  
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  .timeline-item {
+    display: flex;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 28px;
+    bottom: -24px;
+    width: 2px;
+    background: #3C6E54;
+  }
+  .timeline-item:last-child::before { display: none; }
+  
+  .timeline-dot {
+    width: 24px;
+    height: 24px;
+    background: #3C6E54;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    margin-right: 16px;
+    margin-top: 2px;
+  }
+  
+  .timeline-content {
+    background: #F4F5F2;
+    padding: 16px;
+    border-radius: 8px;
+    flex: 1;
+  }
+  .timeline-content h3 { color: #3C6E54; margin-bottom: 8px; }
+  .timeline-content p { color: #5A615C; font-size: 14px; line-height: 1.5; }
+  
+  .alert {
+    background: #D4EDDA;
+    border-left: 4px solid #155724;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    color: #155724;
+    font-size: 14px;
+  }
+  
+  .button-group { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #3C6E54;
+    color: white;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: #2F5A43; transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🚀 Continuous Deployment Setup</h1>
+    <p>Automatic GitHub to Cloudflare Workers Deployment</p>
+  </div>
+  
+  <div class="card">
+    <h2>📋 What This Does</h2>
+    <p style="color: #5A615C; line-height: 1.6; margin-bottom: 16px;">
+      When you push code to GitHub, it automatically deploys to Cloudflare Workers. No manual commands needed!
+    </p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+      <div style="background: #F4F5F2; padding: 16px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
+        <div style="color: #3C6E54; font-weight: 600; margin-bottom: 4px;">Push Code</div>
+        <div style="color: #5A615C; font-size: 12px;">git push</div>
+      </div>
+      <div style="background: #F4F5F2; padding: 16px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 8px;">⚙️</div>
+        <div style="color: #3C6E54; font-weight: 600; margin-bottom: 4px;">Auto Deploy</div>
+        <div style="color: #5A615C; font-size: 12px;">GitHub Actions</div>
+      </div>
+      <div style="background: #F4F5F2; padding: 16px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 8px;">✅</div>
+        <div style="color: #3C6E54; font-weight: 600; margin-bottom: 4px;">Live!</div>
+        <div style="color: #5A615C; font-size: 12px;">Cloudflare Workers</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>⏱️ Timeline</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>Step 1: Get Cloudflare Credentials</h3>
+          <p>Retrieve your Account ID and create an API Token from Cloudflare dashboard.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>Step 2: Add GitHub Secrets</h3>
+          <p>Store credentials securely in your GitHub repository settings.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>Step 3: Push Workflow File</h3>
+          <p>Add the GitHub Actions workflow file to your repository.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>Step 4: Test & Done!</h3>
+          <p>Make a change and push to test automatic deployment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid">
+    <div class="card">
+      <h2>🔐 Step 1: Get API Token</h2>
+      <div class="step">
+        <h3>From Cloudflare Dashboard:</h3>
+        <ol>
+          <li>Go to https://dash.cloudflare.com/</li>
+          <li>Click your profile (top right)</li>
+          <li>Select "My Profile"</li>
+          <li>Click "API Tokens" (left menu)</li>
+          <li>Click "Create Token"</li>
+          <li>Select "Get started" next to "Create Custom Token"</li>
+          <li>Set permissions:
+            <ul style="margin-top: 8px;">
+              <li>Account > Cloudflare Workers > Edit</li>
+              <li>Account > Cloudflare Workers Scripts > Edit</li>
+            </ul>
+          </li>
+          <li>Select "All accounts"</li>
+          <li>Click "Create Token"</li>
+          <li><span class="highlight">Copy the token!</span> (You only see it once)</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>📍 Get Account ID</h2>
+      <div class="step">
+        <h3>From Cloudflare Dashboard:</h3>
+        <ol>
+          <li>Go to https://dash.cloudflare.com/</li>
+          <li>Click your profile (top right)</li>
+          <li>Select "My Profile"</li>
+          <li>Click "API Tokens"</li>
+          <li>Look for <span class="highlight">"Account ID"</span> on the page</li>
+          <li><span class="highlight">Copy your Account ID</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>🔑 Step 2: Add GitHub Secrets</h2>
+    <div class="step" style="margin-bottom: 20px;">
+      <h3>Configure Secret 1: API Token</h3>
+      <ol>
+        <li>Go to https://github.com/TWEBAZEHILLARY/horns-heritage</li>
+        <li>Click <span class="highlight">Settings</span> (repo settings, not profile)</li>
+        <li>Left menu: <span class="highlight">Secrets and variables > Actions</span></li>
+        <li>Click <span class="highlight">New repository secret</span></li>
+        <li>
+          <strong>Name:</strong> <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">CLOUDFLARE_API_TOKEN</code>
+        </li>
+        <li>
+          <strong>Value:</strong> Paste the API token you copied
+        </li>
+        <li>Click <span class="highlight">Add secret</span></li>
+      </ol>
+    </div>
+    
+    <div class="step">
+      <h3>Configure Secret 2: Account ID</h3>
+      <ol>
+        <li>Click <span class="highlight">New repository secret</span></li>
+        <li>
+          <strong>Name:</strong> <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">CLOUDFLARE_ACCOUNT_ID</code>
+        </li>
+        <li>
+          <strong>Value:</strong> Paste your Account ID
+        </li>
+        <li>Click <span class="highlight">Add secret</span></li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>📤 Step 3: Push Files to GitHub</h2>
+    <p style="color: #5A615C; margin-bottom: 16px;">Run these commands to push the workflow file:</p>
+    <div class="code-block">git add .github/workflows/deploy.yml
+git commit -m "Add: GitHub Actions CI/CD workflow"
+git push origin master</div>
+  </div>
+  
+  <div class="card">
+    <h2>✅ Step 4: Test Deployment</h2>
+    <div class="step" style="margin-bottom: 16px;">
+      <h3>Make a Small Change:</h3>
+      <p>Edit any file (e.g., update a comment in index.html)</p>
+      <div class="code-block">git add .
+git commit -m "Test: Verify CI/CD pipeline"
+git push origin master</div>
+    </div>
+    
+    <div class="step">
+      <h3>Monitor Deployment:</h3>
+      <ol>
+        <li>Go to your GitHub repo</li>
+        <li>Click the <span class="highlight">Actions</span> tab</li>
+        <li>You'll see "Deploy to Cloudflare Workers" workflow</li>
+        <li>Wait for it to complete (2-3 minutes)</li>
+        <li>Once <span class="success">✅ green</span>, your site is live!</li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="alert">
+    <strong>🎉 Once Setup:</strong> Just <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">git push</code> and your site automatically deploys!
+  </div>
+  
+  <div class="card" style="background: linear-gradient(135deg, #3C6E54 0%, #5C7B66 100%); color: white;">
+    <h2 style="color: white;">🚀 Ready to Setup?</h2>
+    <p style="color: rgba(255,255,255,0.9); margin-bottom: 16px;">Follow the 4 steps above. Total time: ~10 minutes</p>
+    <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 20px;">After setup, every push to GitHub automatically deploys to Cloudflare Workers!</p>
+    <button class="btn" onclick="alert('1. Get API Token from Cloudflare\n2. Get Account ID from Cloudflare\n3. Add 2 secrets to GitHub\n4. Push workflow file\n5. Test with a small commit')">Show Summary</button>
+  </div>
+</div>
+</body>
+</html>

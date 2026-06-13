@@ -1,0 +1,441 @@
+/* ============================================================
+   Horns & Heritage — Discover layer (ADDITIVE)
+   1. Site-wide search results dropdown
+   2. Unified wishlist hearts (shop + cattle) + wishlist popup
+   3. Buy & Sell Cattle page background grid (afro1.jpg)
+   Uses the site's own design tokens (--primary-green, --terracotta,
+   --gold, --bg-card, --border-soft, etc.). No new palette invented.
+   ============================================================ */
+
+/* ---- shared icon button reset already covered by site `button{}` ---- */
+
+/* ════════════════════════════════════════════════════════════
+   1. SITE-WIDE SEARCH
+   ════════════════════════════════════════════════════════════ */
+html[data-mc="on"] .mc-search { position: relative; }
+
+.hh-search-results {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-soft, #e6e8e4);
+  border-radius: 16px;
+  box-shadow: var(--shadow-dropdown, 0 8px 20px rgba(29, 33, 30, 0.1));
+  max-height: min(460px, 70vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 70;
+  padding: 8px;
+  display: none;
+}
+.hh-search-results.open { display: block; }
+
+.hh-sr-group {
+  font-family: var(--sans, sans-serif);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted, #969c97);
+  padding: 12px 12px 6px;
+}
+.hh-sr-group:first-child { padding-top: 6px; }
+
+.hh-sr-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 11px;
+  color: var(--text-primary, #1d211e);
+  transition: background .15s ease;
+}
+.hh-sr-item:hover,
+.hh-sr-item.is-active { background: var(--bg-secondary, #f4f5f2); }
+
+.hh-sr-thumb {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--bg-alt, #e3ebe4);
+  display: grid;
+  place-items: center;
+  color: var(--primary-green, #3c6e54);
+}
+.hh-sr-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.hh-sr-thumb svg { width: 20px; height: 20px; }
+
+.hh-sr-info { min-width: 0; flex: 1 1 auto; }
+.hh-sr-name {
+  font-family: var(--serif, Georgia, serif);
+  font-weight: 600;
+  font-size: 0.96rem;
+  line-height: 1.25;
+  color: var(--text-primary, #1d211e);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hh-sr-snippet {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #5a615c);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hh-sr-badge {
+  flex: 0 0 auto;
+  font-family: var(--sans, sans-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(60, 110, 84, 0.12);
+  color: var(--primary-green, #3c6e54);
+  white-space: nowrap;
+}
+.hh-sr-badge.cattle { background: rgba(74, 124, 94, 0.14); color: var(--terracotta, #4a7c5e); }
+.hh-sr-badge.tour { background: rgba(110, 143, 116, 0.16); color: var(--gold-dark, #566f5b); }
+.hh-sr-badge.member { background: rgba(47, 90, 67, 0.12); color: var(--rust, #2f5a43); }
+.hh-sr-badge.page { background: rgba(150, 156, 151, 0.16); color: var(--text-secondary, #5a615c); }
+
+.hh-sr-price {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary-green, #3c6e54);
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+.hh-sr-empty {
+  padding: 26px 16px;
+  text-align: center;
+  color: var(--text-secondary, #5a615c);
+  font-size: 0.9rem;
+}
+.hh-sr-empty strong { color: var(--text-primary, #1d211e); font-family: var(--serif, serif); }
+
+.hh-sr-foot {
+  padding: 9px 12px 5px;
+  border-top: 1px solid var(--border-soft, #e6e8e4);
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted, #969c97);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.hh-sr-foot kbd {
+  font-family: var(--sans, sans-serif);
+  font-size: 0.66rem;
+  background: var(--bg-secondary, #f4f5f2);
+  border: 1px solid var(--border-soft, #e6e8e4);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   2. WISHLIST HEARTS on product + cattle cards
+   (hide the old decorative .nl-fav; one unified heart instead)
+   ════════════════════════════════════════════════════════════ */
+html[data-nl="on"] .nl-fav { display: none !important; }
+
+.hh-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 6;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text-secondary, #5a615c);
+  box-shadow: 0 2px 8px rgba(29, 33, 30, 0.16);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  transition: transform .16s ease, background .2s ease, color .2s ease;
+}
+.hh-heart svg { width: 18px; height: 18px; display: block; pointer-events: none; }
+.hh-heart:hover { transform: scale(1.1); color: var(--terracotta, #4a7c5e); }
+.hh-heart:active { transform: scale(0.92); }
+.hh-heart.is-active { background: var(--terracotta, #4a7c5e); color: #fff; }
+.hh-heart.is-active svg { fill: currentColor; }
+@keyframes hhHeartPop { 0% { transform: scale(1); } 45% { transform: scale(1.32); } 100% { transform: scale(1); } }
+.hh-heart.just-added { animation: hhHeartPop .34s var(--f7-ease-bounce, cubic-bezier(.34,1.56,.64,1)); }
+
+/* Make sure the card image wrapper anchors the heart */
+#shop .product-card .product-img,
+#cattle .product-card .product-img { position: relative; }
+
+/* Wishlist nav button active count colour reuse existing .mc-wishlist styles */
+html[data-mc="on"] .mc-wishlist { position: relative; cursor: pointer; }
+
+/* ════════════════════════════════════════════════════════════
+   2b. WISHLIST POPUP
+   ════════════════════════════════════════════════════════════ */
+.hh-wl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgba(29, 33, 30, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 5vh, 64px) 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+}
+.hh-wl-overlay.open { opacity: 1; pointer-events: auto; }
+
+.hh-wl-modal {
+  width: 100%;
+  max-width: 540px;
+  max-height: 86vh;
+  background: var(--bg-card, #fff);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(29, 33, 30, 0.32);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(14px) scale(0.985);
+  transition: transform .26s var(--f7-ease-bounce, cubic-bezier(.34,1.56,.64,1));
+}
+.hh-wl-overlay.open .hh-wl-modal { transform: translateY(0) scale(1); }
+
+.hh-wl-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--border-soft, #e6e8e4);
+}
+.hh-wl-head h2 {
+  font-family: var(--serif, serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary, #1d211e);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hh-wl-head .hh-wl-num {
+  font-family: var(--sans, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(60, 110, 84, 0.12);
+  color: var(--primary-green, #3c6e54);
+  border-radius: 999px;
+  padding: 3px 11px;
+}
+.hh-wl-close {
+  margin-left: auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--text-secondary, #5a615c);
+  background: var(--bg-secondary, #f4f5f2);
+  transition: background .2s, color .2s;
+}
+.hh-wl-close:hover { background: var(--bg-alt, #e3ebe4); color: var(--text-primary, #1d211e); }
+.hh-wl-close svg { width: 18px; height: 18px; }
+
+.hh-wl-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 16px;
+  flex: 1 1 auto;
+}
+
+.hh-wl-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 8px;
+  border-bottom: 1px solid var(--border-soft, #e6e8e4);
+}
+.hh-wl-item:last-child { border-bottom: none; }
+.hh-wl-thumb {
+  flex: 0 0 auto;
+  width: 62px;
+  height: 62px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-alt, #e3ebe4);
+  display: grid;
+  place-items: center;
+  color: var(--primary-green, #3c6e54);
+}
+.hh-wl-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.hh-wl-thumb svg { width: 24px; height: 24px; }
+.hh-wl-info { min-width: 0; flex: 1 1 auto; }
+.hh-wl-name {
+  font-family: var(--serif, serif);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary, #1d211e);
+  line-height: 1.25;
+}
+.hh-wl-sub { display: flex; align-items: center; gap: 8px; margin-top: 3px; flex-wrap: wrap; }
+.hh-wl-price { font-size: 0.86rem; font-weight: 600; color: var(--primary-green, #3c6e54); }
+.hh-wl-type {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted, #969c97);
+}
+.hh-wl-soldout {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #b94a36;
+  background: rgba(185, 74, 54, 0.1);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.hh-wl-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+.hh-wl-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-family: var(--sans, sans-serif);
+  font-weight: 600;
+  font-size: 0.8rem;
+  background: var(--primary-green, #3c6e54);
+  color: var(--cream, #f4f7f3);
+  white-space: nowrap;
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.hh-wl-add:hover { background: #1b4d3e; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(45, 106, 79, 0.25); }
+.hh-wl-add.wa { background: #25a366; }
+.hh-wl-add.wa:hover { background: #1d8551; box-shadow: 0 6px 14px rgba(37, 163, 102, 0.3); }
+.hh-wl-add svg { width: 15px; height: 15px; }
+.hh-wl-add.done { background: var(--gold-dark, #566f5b); }
+.hh-wl-add[disabled] { background: var(--bg-alt, #e3ebe4); color: var(--text-muted, #969c97); cursor: not-allowed; transform: none; box-shadow: none; }
+
+.hh-wl-remove {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted, #969c97);
+  background: transparent;
+  transition: background .18s, color .18s;
+}
+.hh-wl-remove:hover { background: rgba(185, 74, 54, 0.1); color: #b94a36; }
+.hh-wl-remove svg { width: 17px; height: 17px; }
+
+.hh-wl-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary, #5a615c);
+}
+.hh-wl-empty .hh-wl-empty-ico {
+  width: 56px; height: 56px; margin: 0 auto 14px;
+  color: var(--accent-green, #7fa088);
+}
+.hh-wl-empty h3 { font-family: var(--serif, serif); font-size: 1.2rem; color: var(--text-primary, #1d211e); margin-bottom: 6px; }
+.hh-wl-empty p { font-size: 0.9rem; }
+
+.hh-wl-foot {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-soft, #e6e8e4);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.hh-wl-clear {
+  font-family: var(--sans, sans-serif);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-secondary, #5a615c);
+  padding: 12px 8px;
+}
+.hh-wl-clear:hover { color: #b94a36; }
+.hh-wl-addall {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-family: var(--sans, sans-serif);
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: var(--gold, #6e8f74);
+  color: var(--text-primary, #1d211e);
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.hh-wl-addall:hover { background: var(--gold-dark, #566f5b); color: #fff; transform: translateY(-1px); box-shadow: 0 8px 18px rgba(110, 143, 116, 0.3); }
+.hh-wl-addall svg { width: 17px; height: 17px; }
+.hh-wl-addall[disabled] { background: var(--bg-alt, #e3ebe4); color: var(--text-muted, #969c97); cursor: not-allowed; transform: none; box-shadow: none; }
+
+@media (max-width: 560px) {
+  .hh-wl-add span.lbl { display: none; }
+  .hh-wl-add { padding: 9px 11px; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   3. BUY & SELL CATTLE — professional background grid (afro1.jpg)
+   Only #cattle gets it. Subtle watermark texture, fixed for a
+   classy effect, content stays fully readable above it.
+   ════════════════════════════════════════════════════════════ */
+#cattle { position: relative; isolation: isolate; }
+#cattle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('uploads/afro1.jpg');
+  background-repeat: repeat;
+  background-size: 230px auto;
+  background-attachment: fixed;
+  background-position: center top;
+  opacity: 0.13;
+  pointer-events: none;
+}
+/* soft cream wash so cards/text stay crisp on top of the busy pattern */
+#cattle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(244, 247, 243, 0.55), rgba(227, 235, 228, 0.45));
+  pointer-events: none;
+}
+#cattle > .container { position: relative; z-index: 1; }
+
+@media (max-width: 768px) {
+  /* fixed attachment is janky on mobile; scroll + smaller tile is smoother */
+  #cattle::before {
+    background-attachment: scroll;
+    background-size: 170px auto;
+    opacity: 0.11;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hh-wl-modal, .hh-wl-overlay, .hh-heart { transition: none; }
+  .hh-heart.just-added { animation: none; }
+}

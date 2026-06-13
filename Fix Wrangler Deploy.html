@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix: assets.directory does not exist</title>
+<link rel="stylesheet" href="_ds/urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/tokens/colors.css">
+<link rel="stylesheet" href="_ds/urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/tokens/typography.css">
+<link rel="stylesheet" href="_ds/urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/styles.css">
+<style>
+  body { margin: 0; background: #FAFAFA; color: #1C1917; font-family: var(--font-body, Inter, sans-serif); }
+  .page { max-width: 880px; margin: 0 auto; padding: 48px 32px 80px; }
+  h1 { font-family: var(--font-headline, 'Space Grotesk', sans-serif); font-size: 32px; line-height: 1.2; margin: 0 0 8px; }
+  h2 { font-family: var(--font-headline, 'Space Grotesk', sans-serif); font-size: 20px; margin: 40px 0 12px; }
+  p { font-size: 15px; line-height: 1.6; color: #44403C; margin: 0 0 12px; }
+  .tag { display: inline-block; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; background: #1C1917; color: #fff; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px; }
+  .card { background: #fff; border: 1px solid #E7E5E4; border-radius: 4px; padding: 24px; margin: 16px 0; }
+  pre { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; background: #1C1917; color: #FAFAFA; border-radius: 4px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 2px; padding: 1px 5px; }
+  pre code { background: none; border: none; padding: 0; }
+  .step { display: grid; grid-template-columns: 36px 1fr; gap: 16px; margin: 20px 0; }
+  .num { width: 32px; height: 32px; border-radius: 4px; background: #1C1917; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  .warn { border-left: none; border: 1px solid #E7E5E4; background: #fff; border-radius: 4px; padding: 16px 20px; margin: 16px 0; }
+  .warn strong { font-family: var(--font-headline, 'Space Grotesk', sans-serif); display: block; margin-bottom: 4px; }
+  .ok { color: #15803D; }
+  .bad { color: #B91C1C; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  td, th { border: 1px solid #E7E5E4; padding: 8px 12px; text-align: left; }
+  th { font-family: var(--font-headline, 'Space Grotesk', sans-serif); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background: #F5F5F4; }
+  td code { white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="page">
+  <span class="tag">Deploy fix</span>
+  <h1>Why the deploy failed, and how to fix it</h1>
+  <p>Cloudflare's build machine clones your <strong>GitHub repo</strong> into <code>/opt/buildhome/repo</code>. Your repo has no <code>public/</code> folder — every site file sits at the repo root, and the <code>assets/</code> images folder was never pushed. But <code>wrangler.toml</code> says <code>directory = "./public"</code>, so Wrangler stops with <span class="bad">"the directory does not exist"</span>.</p>
+
+  <div class="card">
+    <p style="margin:0"><strong>The fix:</strong> a tiny build script, <code>build-public.mjs</code>, now assembles <code>./public</code> from your root files on every deploy — and Wrangler is updated to v4, which clears the version warning. Three files changed: <code>build-public.mjs</code> (new), <code>package.json</code>, <code>.github/workflows/deploy.yml</code>.</p>
+  </div>
+
+  <h2>Step 1 — Commit and push the changed files</h2>
+  <div class="step">
+    <div class="num">1</div>
+    <div>
+      <p>From your local repo folder, copy in the three files from this project, then:</p>
+      <pre><code>git add build-public.mjs package.json .github/workflows/deploy.yml assets
+git commit -m "fix: build ./public before deploy, wrangler v4"
+git push origin master</code></pre>
+      <p>Note <code>assets</code> in the <code>git add</code> — your images folder is not in the repo yet. Without it the site deploys but every image 404s.</p>
+    </div>
+  </div>
+
+  <h2>Step 2 — Update the Cloudflare build settings</h2>
+  <div class="step">
+    <div class="num">2</div>
+    <div>
+      <p>In the Cloudflare dashboard: <strong>Workers &amp; Pages → horns-heritage → Settings → Build</strong>, set:</p>
+      <table>
+        <tr><th>Setting</th><th>Value</th></tr>
+        <tr><td>Build command</td><td><code>npm install &amp;&amp; npm run build</code></td></tr>
+        <tr><td>Deploy command</td><td><code>npx wrangler deploy</code></td></tr>
+      </table>
+      <p style="margin-top:12px">This matches the Wrangler docs you linked — Wrangler installed as a dev dependency and always run through <code>npx wrangler</code>.</p>
+    </div>
+  </div>
+
+  <h2>Step 3 — The next error you will hit (fix it now)</h2>
+  <div class="step">
+    <div class="num">3</div>
+    <div>
+      <p>Your <code>wrangler.toml</code> still has placeholder KV ids (<code>REPLACE_WITH_CATTLE_KV_ID</code>). Once the public-folder error is gone, deploy will fail on these. Create the namespaces once and paste the printed ids into <strong>all four</strong> id fields in <code>wrangler.toml</code>:</p>
+      <pre><code>npx wrangler kv namespace create CATTLE_KV
+npx wrangler kv namespace create NEWS_KV</code></pre>
+    </div>
+  </div>
+
+  <h2>Verify locally before pushing</h2>
+  <pre><code>npm install
+npm run build        <span class="ok"># should print: ✓ built ./public</span>
+npx wrangler deploy --dry-run</code></pre>
+
+  <div class="warn">
+    <strong>What gets deployed</strong>
+    <p style="margin:0">The script copies <code>index.html</code>, <code>Sales Dashboard.html</code>, <code>admin-news-dashboard.html</code>, all CSS/JS, and <code>assets/</code> into <code>public/</code>. It deliberately skips <code>worker.js</code>, the setup guides, and all <code>.md</code> docs so they are never publicly served. <code>public/</code> stays out of git — it is rebuilt on every deploy.</p>
+  </div>
+</div>
+</body>
+</html>

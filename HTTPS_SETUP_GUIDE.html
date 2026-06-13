@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enable HTTPS for Both Sites</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; }
+    header { background: linear-gradient(135deg, #2563EB 0%, #1C5A96 100%); color: white; padding: 40px; text-align: center; }
+    header h1 { margin: 0; font-size: 2.5em; font-weight: 700; }
+    header p { margin: 10px 0 0 0; opacity: 0.95; }
+    .content { padding: 40px; }
+    .step { margin-bottom: 40px; padding: 30px; background: #f9fafb; border-left: 5px solid #2563EB; border-radius: 6px; }
+    .step-number { display: inline-block; width: 40px; height: 40px; background: #2563EB; color: white; text-align: center; line-height: 40px; border-radius: 50%; font-weight: 700; margin-right: 15px; }
+    .step h2 { margin: 0 0 20px 0; display: flex; align-items: center; font-size: 1.5em; }
+    code { background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-family: 'Monaco', monospace; color: #d32f2f; }
+    pre { background: #1f2937; color: #10b981; padding: 20px; border-radius: 6px; overflow-x: auto; font-family: 'Monaco', monospace; font-size: 0.9em; margin: 15px 0; }
+    .note { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    .success { background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+    .col { background: #f3f4f6; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb; }
+    .col h3 { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    th { background: #f3f4f6; font-weight: 600; }
+    ul, ol { margin: 15px 0; padding-left: 25px; }
+    li { margin: 10px 0; }
+    .danger { background: #fee2e2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🔒 Enable HTTPS for Both Sites</h1>
+    <p>Horns & Heritage — Public Site (Cloudflare) + Dashboard (Your Server)</p>
+  </header>
+
+  <div class="content">
+
+    <div class="step">
+      <h2><span class="step-number">1️⃣</span>Public Website (Cloudflare Pages) — HTTPS Automatic</h2>
+      
+      <div class="success">
+        <strong>✅ Already HTTPS!</strong> Cloudflare Pages automatically provides HTTPS for all sites at <code>*.pages.dev</code>
+      </div>
+
+      <p><strong>Your public site is already secure:</strong></p>
+      <ul>
+        <li>URL: <code>https://horns-heritage.pages.dev</code> (automatic SSL/TLS)</li>
+        <li>Certificate: Provided by Cloudflare (free, auto-renewing)</li>
+        <li>No action needed</li>
+      </ul>
+
+      <h3>If Using Custom Domain</h3>
+      <p>If you connect a custom domain (e.g., <code>horns-heritage.com</code>):</p>
+      <ol>
+        <li>Go to Cloudflare Dashboard → Your Domain</li>
+        <li>Go to <strong>SSL/TLS</strong> → <strong>Overview</strong></li>
+        <li>Set to <strong>"Full"</strong> or <strong>"Full (Strict)"</strong></li>
+        <li>Cloudflare auto-provisions HTTPS for your domain</li>
+      </ol>
+
+      <div class="success">
+        <strong>✅ Result:</strong> <code>https://horns-heritage.com</code> works with HTTPS
+      </div>
+    </div>
+
+    <div class="step">
+      <h2><span class="step-number">2️⃣</span>Sales Dashboard (Your Server) — HTTPS Setup</h2>
+      
+      <p><strong>Your dashboard needs HTTPS too.</strong> Choose based on your server type:</p>
+
+      <div class="two-col">
+        <div class="col">
+          <h3>🖥️ Option A: Local Dev (localhost)</h3>
+          <p>If running locally on port 5000:</p>
+          <pre>python -m http.server 5000</pre>
+          <p><strong>Note:</strong> localhost is allowed to use HTTP for testing. Browsers won't warn about it.</p>
+          <p><code>http://localhost:5000/Sales%20Dashboard.html</code> ✅ (safe for local dev)</p>
+        </div>
+
+        <div class="col">
+          <h3>☁️ Option B: Production Server</h3>
+          <p>If deployed to AWS, Heroku, etc.:</p>
+          <ul>
+            <li>Use <strong>Let's Encrypt</strong> (free SSL)</li>
+            <li>Use your hosting provider's HTTPS</li>
+          </ul>
+          <p>Keep reading for setup ↓</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="step">
+      <h2><span class="step-number">3️⃣</span>Production Dashboard — Enable HTTPS</h2>
+      
+      <h3>If Hosting on AWS / EC2</h3>
+      <ol>
+        <li><strong>Install Certbot (Let's Encrypt):</strong>
+          <pre>sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx
+# or for Apache:
+sudo apt-get install certbot python3-certbot-apache</pre>
+        </li>
+        <li><strong>Get SSL certificate:</strong>
+          <pre>sudo certbot certonly --standalone -d your-domain.com</pre>
+        </li>
+        <li><strong>Configure your server to use the certificate:</strong>
+          <ul>
+            <li>For Nginx: Point to <code>/etc/letsencrypt/live/your-domain.com/</code></li>
+            <li>For Apache: Enable mod_ssl and point to certificate</li>
+          </ul>
+        </li>
+        <li><strong>Restart server:</strong>
+          <pre>sudo systemctl restart nginx
+# or
+sudo systemctl restart apache2</pre>
+        </li>
+      </ol>
+
+      <h3>If Hosting on Heroku</h3>
+      <ol>
+        <li>Heroku provides <strong>automatic HTTPS</strong> on all apps</li>
+        <li>Just deploy: <code>git push heroku main</code></li>
+        <li>Access via: <code>https://your-app.herokuapp.com</code></li>
+      </ol>
+
+      <h3>If Hosting on DigitalOcean / Linode</h3>
+      <ol>
+        <li>Use Certbot (same as AWS above)</li>
+        <li>Or enable their managed SSL service</li>
+      </ol>
+
+    </div>
+
+    <div class="step">
+      <h2><span class="step-number">4️⃣</span>Update Your Code for HTTPS</h2>
+      
+      <p><strong>If you're making API calls between sites, update URLs to HTTPS:</strong></p>
+
+      <h3>In hh-api.js (or wherever you make API calls):</h3>
+      <pre>// OLD (HTTP)
+const API_URL = 'http://your-server.com/api';
+
+// NEW (HTTPS)
+const API_URL = 'https://your-server.com/api';</pre>
+
+      <h3>In dashboard files (Sales Dashboard.html, admin-news-dashboard.html):</h3>
+      <pre>// OLD (HTTP)
+fetch('http://your-server.com/api/cattle', ...)
+
+// NEW (HTTPS)
+fetch('https://your-server.com/api/cattle', ...)</pre>
+
+      <p><strong>Also check for hardcoded URLs in:</strong></p>
+      <ul>
+        <li><code>hh-api.js</code></li>
+        <li><code>app.js</code></li>
+        <li><code>dashboard-*.js</code> files</li>
+        <li>Any <code>&lt;script src="..."&gt;</code> tags in HTML</li>
+      </ul>
+
+    </div>
+
+    <div class="step">
+      <h2><span class="step-number">5️⃣</span>Test HTTPS on Both Sites</h2>
+      
+      <table>
+        <tr>
+          <th>Site</th>
+          <th>URL</th>
+          <th>Check For</th>
+        </tr>
+        <tr>
+          <td>Public Website</td>
+          <td><code>https://horns-heritage.pages.dev</code></td>
+          <td>🔒 Padlock icon in browser. Open DevTools Network tab — all files should load via HTTPS</td>
+        </tr>
+        <tr>
+          <td>Dashboard</td>
+          <td><code>https://your-server.com/Sales%20Dashboard.html</code> (or localhost for dev)</td>
+          <td>🔒 Padlock icon. Check console (F12) for mixed content warnings</td>
+        </tr>
+      </table>
+
+      <div class="danger">
+        <strong>⚠️ Mixed Content Warning:</strong> If you see "mixed content" errors in console, it means:
+        <ul>
+          <li>Your page is HTTPS but loads HTTP resources</li>
+          <li>Update all <code>http://</code> URLs to <code>https://</code></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="step">
+      <h2><span class="step-number">6️⃣</span>Verify Data Sync Over HTTPS</h2>
+      
+      <p><strong>Make sure HHApi still works with HTTPS:</strong></p>
+
+      <ol>
+        <li>Open dashboard at <code>https://your-server.com/Sales%20Dashboard.html</code></li>
+        <li>Add a test cattle item</li>
+        <li>Open public site at <code>https://horns-heritage.pages.dev</code></li>
+        <li>Refresh page — should see your new item</li>
+      </ol>
+
+      <div class="success">
+        <strong>✅ If data appears:</strong> HTTPS sync is working. Both sites are secure and talking to each other.
+      </div>
+
+    </div>
+
+    <div class="step" style="background: #ecfdf5; border-left-color: #10b981;">
+      <h2 style="color: #047857;">✅ HTTPS Setup Complete</h2>
+      
+      <h3>Summary</h3>
+      <ul>
+        <li>✅ Public site on Cloudflare: <code>https://horns-heritage.pages.dev</code> (automatic)</li>
+        <li>✅ Dashboard on your server: <code>https://your-server.com</code> (use Let's Encrypt or hosting provider)</li>
+        <li>✅ Updated all URLs in code to HTTPS</li>
+        <li>✅ Verified data sync works over HTTPS</li>
+      </ul>
+
+      <h3>Next Steps</h3>
+      <ol>
+        <li>If using production server: Set up SSL certificate (Let's Encrypt or provider)</li>
+        <li>Update all hardcoded <code>http://</code> URLs to <code>https://</code></li>
+        <li>Test both sites — verify 🔒 padlock icon shows</li>
+        <li>Check DevTools console for warnings</li>
+      </ol>
+
+      <p style="margin-top: 20px;"><strong>Local development?</strong> <code>http://localhost:5000</code> is fine for testing.</p>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

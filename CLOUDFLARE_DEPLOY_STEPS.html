@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudflare Deployment — Step by Step</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    header {
+      background: linear-gradient(135deg, #2563EB 0%, #1C5A96 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 700;
+    }
+    header p {
+      margin: 10px 0 0 0;
+      opacity: 0.95;
+      font-size: 1.1em;
+    }
+    .content { padding: 40px; }
+    .step {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: #f9fafb;
+      border-left: 5px solid #2563EB;
+      border-radius: 6px;
+    }
+    .step-number {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: #2563EB;
+      color: white;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 15px;
+      font-size: 1.2em;
+    }
+    .step h2 {
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      font-size: 1.5em;
+      color: #1a1a1a;
+    }
+    .step p, .step li {
+      margin: 12px 0;
+      font-size: 1em;
+    }
+    .step ul, .step ol {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+    .step li { margin: 10px 0; }
+    code {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.95em;
+      color: #d32f2f;
+    }
+    pre {
+      background: #1f2937;
+      color: #10b981;
+      padding: 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9em;
+      line-height: 1.5;
+      margin: 15px 0;
+    }
+    .note {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .note strong { color: #d97706; }
+    .success {
+      background: #d1fae5;
+      border-left: 4px solid #10b981;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .success strong { color: #047857; }
+    .danger {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .danger strong { color: #991b1b; }
+    .option {
+      background: #ede9fe;
+      border: 2px solid #c4b5fd;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+    .option h3 {
+      margin-top: 0;
+      color: #6d28d9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      background: white;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .folder-tree {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Monaco', monospace;
+      font-size: 0.9em;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+    .file-icon { margin-right: 8px; }
+    .emoji { font-size: 1.3em; margin-right: 10px; }
+    .button-demo {
+      display: inline-block;
+      background: #2563EB;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+    .button-demo:hover { background: #1C5A96; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🚀 Cloudflare Pages Deployment</h1>
+    <p>Horns & Heritage — Complete Step-by-Step Guide</p>
+  </header>
+
+  <div class="content">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <h2><span class="step-number">1</span>Check Your File Structure</h2>
+      <p>Before deploying, verify your files are organized correctly for Cloudflare.</p>
+      
+      <p><strong>Cloudflare Pages expects ONE root folder with all assets at the top level.</strong></p>
+      
+      <div class="folder-tree">
+📁 your-project/<br>
+├── 📄 index.html<br>
+├── 📄 hh-enhance.css<br>
+├── 📄 hh-redesign.css<br>
+├── 📄 hh-discover.css<br>
+├── 📄 app.js<br>
+├── 📄 tilt-3d.js<br>
+├── 📁 assets/<br>
+│&nbsp;&nbsp; ├── 📷 hero-image.jpg<br>
+│&nbsp;&nbsp; ├── 📷 logo.png<br>
+│&nbsp;&nbsp; └── ...<br>
+├── 📁 _ds/<br>
+│&nbsp;&nbsp; └── urbanloft-design-system-6db9302f-8fa0-4943-bea9-04c287185da1/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── _ds_bundle.js<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── styles.css<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── tokens/
+      </div>
+
+      <div class="note">
+        <strong>⚠️ Important:</strong> If your files are nested in <code>src/</code>, <code>public/</code>, or other folders, you must move them to the root BEFORE deploying.
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <h2><span class="step-number">2</span>Choose Your Deployment Method</h2>
+      <p>Pick the approach that works best for your workflow:</p>
+
+      <div class="option">
+        <h3>🎯 Option A: Simple Dashboard Upload (Easiest)</h3>
+        <p><strong>No Git, no terminal.</strong> Upload files directly from Cloudflare's web interface.</p>
+        <ul>
+          <li>Best for: Quick deployments, testing, one-off uploads</li>
+          <li>Time: 2-3 minutes</li>
+          <li>Edits: Upload updated files each time (not automatic)</li>
+        </ul>
+      </div>
+
+      <div class="option">
+        <h3>🔄 Option B: GitHub + Auto-Deploy (Recommended)</h3>
+        <p><strong>Push to GitHub → Cloudflare auto-deploys.</strong> Professional workflow.</p>
+        <ul>
+          <li>Best for: Team projects, version control, automatic updates</li>
+          <li>Time: 5 minutes setup, then instant deploys</li>
+          <li>Edits: Automatically tracked in Git history</li>
+        </ul>
+      </div>
+
+      <div class="option">
+        <h3>📦 Option C: Bundle to Single HTML (Safest)</h3>
+        <p><strong>All code + assets in ONE file.</strong> No broken relative paths.</p>
+        <ul>
+          <li>Best for: Maximum reliability, offline-ready</li>
+          <li>Time: 2 minutes</li>
+          <li>Edits: Single file to edit and deploy</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- STEP 3A -->
+    <div class="step">
+      <h2><span class="step-number">3A</span>Deploy via Cloudflare Dashboard (Option A)</h2>
+      <p>If you chose <strong>Option A: Simple Dashboard Upload</strong></p>
+
+      <ol>
+        <li><strong>Go to</strong> <a href="https://dash.cloudflare.com/" class="button-demo">https://dash.cloudflare.com/</a></li>
+        <li><strong>Log in</strong> with your Cloudflare account</li>
+        <li><strong>Select your domain</strong> (or create a new project)</li>
+        <li><strong>Go to Pages</strong> → Click <code>Create project</code></li>
+        <li><strong>Choose "Upload files"</strong> (NOT "Connect to Git")</li>
+        <li><strong>Drag and drop</strong> your entire project folder (or select files)</li>
+        <li><strong>Set build settings:</strong>
+          <table>
+            <tr>
+              <th>Field</th>
+              <th>Value</th>
+            </tr>
+            <tr>
+              <td>Framework</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td>Build command</td>
+              <td>(Leave empty)</td>
+            </tr>
+            <tr>
+              <td>Build output directory</td>
+              <td><code>.</code> (current directory)</td>
+            </tr>
+          </table>
+        </li>
+        <li><strong>Click "Deploy site"</strong></li>
+      </ol>
+
+      <div class="success">
+        <strong>✅ Your site is live!</strong> Cloudflare assigns you a URL like <code>horns-heritage-abc123.pages.dev</code>
+      </div>
+
+      <p><strong>To verify assets loaded:</strong></p>
+      <ol>
+        <li>Open your Cloudflare site in a browser</li>
+        <li>Press <code>F12</code> to open DevTools</li>
+        <li>Go to the <strong>Network</strong> tab</li>
+        <li>Reload the page (<code>Cmd+R</code> or <code>Ctrl+R</code>)</li>
+        <li>Check the list — all files should show <code>200</code> (success) not <code>404</code> (missing)</li>
+      </ol>
+
+    </div>
+
+    <!-- STEP 3B -->
+    <div class="step">
+      <h2><span class="step-number">3B</span>Deploy via GitHub + Auto-Deploy (Option B)</h2>
+      <p>If you chose <strong>Option B: GitHub + Auto-Deploy</strong></p>
+
+      <h3>Part 1: Push Your Code to GitHub</h3>
+      <pre>cd /path/to/your/horns-heritage
+git init
+git add .
+git commit -m "Initial commit: Horns & Heritage site"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/horns-heritage.git
+git push -u origin main</pre>
+
+      <div class="note">
+        <strong>📝 Note:</strong> Replace <code>YOUR-USERNAME</code> with your actual GitHub username.
+      </div>
+
+      <h3>Part 2: Connect GitHub to Cloudflare</h3>
+      <ol>
+        <li><strong>Go to</strong> <a href="https://dash.cloudflare.com/" class="button-demo">https://dash.cloudflare.com/</a></li>
+        <li><strong>Select your domain</strong> → <strong>Pages</strong></li>
+        <li><strong>Click "Create project"</strong> → <strong>"Connect to Git"</strong></li>
+        <li><strong>Authorize GitHub</strong> (sign in if prompted)</li>
+        <li><strong>Select your repository</strong> (<code>horns-heritage</code>)</li>
+        <li><strong>Build settings:</strong>
+          <table>
+            <tr>
+              <th>Field</th>
+              <th>Value</th>
+            </tr>
+            <tr>
+              <td>Framework</td>
+              <td>None</td>
+            </tr>
+            <tr>
+              <td>Build command</td>
+              <td>(Leave empty)</td>
+            </tr>
+            <tr>
+              <td>Build output directory</td>
+              <td><code>.</code></td>
+            </tr>
+          </table>
+        </li>
+        <li><strong>Click "Save and Deploy"</strong></li>
+      </ol>
+
+      <div class="success">
+        <strong>✅ Now every time you push to GitHub, Cloudflare auto-deploys!</strong>
+      </div>
+
+      <p><strong>Future updates are simple:</strong></p>
+      <pre>git add index.html hh-enhance.css ...
+git commit -m "Update hero section styling"
+git push</pre>
+
+    </div>
+
+    <!-- STEP 3C -->
+    <div class="step">
+      <h2><span class="step-number">3C</span>Bundle to Single HTML (Option C)</h2>
+      <p>If you chose <strong>Option C: Bundle to Single HTML</strong></p>
+
+      <p><strong>This approach bundles ALL CSS, JS, images, and fonts into ONE HTML file.</strong> No more broken relative paths.</p>
+
+      <h3>Using the Design Tool</h3>
+      <ol>
+        <li>In your design editor, use: <code>super_inline_html()</code></li>
+        <li><strong>Input:</strong> <code>index.html</code></li>
+        <li><strong>Output:</strong> <code>horns-heritage-standalone.html</code></li>
+      </ol>
+
+      <p>This creates a single file with <strong>everything embedded.</strong></p>
+
+      <h3>Then Deploy to Cloudflare</h3>
+      <ol>
+        <li>Go to <a href="https://dash.cloudflare.com/" class="button-demo">https://dash.cloudflare.com/</a></li>
+        <li><strong>Pages</strong> → <strong>Create project</strong> → <strong>Upload files</strong></li>
+        <li><strong>Upload only</strong> <code>horns-heritage-standalone.html</code></li>
+        <li><strong>Deploy</strong></li>
+      </ol>
+
+      <div class="success">
+        <strong>✅ Guaranteed to work!</strong> No file paths can break because everything is in one file.
+      </div>
+
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <h2><span class="step-number">4</span>Track Your Edits (Version Control)</h2>
+      <p>Document which files you changed and why.</p>
+
+      <h3>Option 1: Git History (Automatic)</h3>
+      <p>If you used <strong>Option B (GitHub)</strong>, your edits are automatically tracked:</p>
+      <pre>git log --oneline
+# Shows all commits with messages like:
+# abc1234 Update hero section styling
+# def5678 Fix cart calculation
+# 123abcd Initial commit</pre>
+
+      <h3>Option 2: Create an EDIT_HISTORY.md File</h3>
+      <p>Document your changes manually:</p>
+      <pre># Edits to Horns & Heritage
+
+## 2026-06-13
+- **index.html**: Updated hero background to #3C6E54
+  - Line 456: Changed --primary-green color
+- **hh-enhance.css**: Added card hover effect (line 234-240)
+
+## 2026-06-12
+- **app.js**: Fixed cart calculation bug (line 145)</pre>
+
+      <p>Commit this file to Git:</p>
+      <pre>git add EDIT_HISTORY.md
+git commit -m "Add edit history documentation"
+git push</pre>
+
+      <h3>Option 3: Add Comments in Code</h3>
+      <p>Mark edited sections with comments:</p>
+      <pre>/* EDITED: 2026-06-13 - Custom theme colors */
+:root {
+  --primary-green: #3C6E54; /* CUSTOM: was #5A8970 */
+  --secondary-green: #5C7B66;
+}</pre>
+
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <h2><span class="step-number">5</span>Verify Everything Works</h2>
+      <p>After deployment, confirm all assets load correctly.</p>
+
+      <h3>In Your Browser</h3>
+      <ol>
+        <li><strong>Open your live site</strong> (e.g., <code>horns-heritage.pages.dev</code> or your custom domain)</li>
+        <li><strong>Press F12</strong> to open DevTools</li>
+        <li><strong>Click the "Network" tab</strong></li>
+        <li><strong>Reload the page</strong> (<code>Cmd+R</code> or <code>Ctrl+R</code>)</li>
+        <li><strong>Look for red/404 errors:</strong>
+          <ul>
+            <li>✅ All files show <code>200</code> = Success</li>
+            <li>❌ Any files show <code>404</code> = Missing file</li>
+          </ul>
+        </li>
+      </ol>
+
+      <table>
+        <tr>
+          <th>File</th>
+          <th>Expected Status</th>
+          <th>If 404: Fix</th>
+        </tr>
+        <tr>
+          <td><code>index.html</code></td>
+          <td>200</td>
+          <td>Main file — should always load</td>
+        </tr>
+        <tr>
+          <td><code>hh-enhance.css</code></td>
+          <td>200</td>
+          <td>Check file is in root folder</td>
+        </tr>
+        <tr>
+          <td><code>app.js</code></td>
+          <td>200</td>
+          <td>Check file is in root folder</td>
+        </tr>
+        <tr>
+          <td><code>assets/image.jpg</code></td>
+          <td>200</td>
+          <td>Check <code>assets/</code> folder exists</td>
+        </tr>
+        <tr>
+          <td><code>_ds/...</code></td>
+          <td>200</td>
+          <td>Check <code>_ds/</code> folder exists</td>
+        </tr>
+      </table>
+
+      <div class="danger">
+        <strong>⚠️ If you see 404s:</strong> Your file structure is wrong. Go back to Step 1 and ensure all files are in the root folder, or use Option C (Bundle HTML) to avoid path issues.
+      </div>
+
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <h2><span class="step-number">6</span>Future Deployments</h2>
+
+      <h3>If You Used Option A (Dashboard Upload)</h3>
+      <p>Each time you make changes:</p>
+      <ol>
+        <li>Go to <a href="https://dash.cloudflare.com/" class="button-demo">https://dash.cloudflare.com/</a> → Pages</li>
+        <li>Click your project</li>
+        <li>Click <strong>"Re-deploy from GitHub"</strong> (or upload files again)</li>
+      </ol>
+
+      <h3>If You Used Option B (GitHub Auto-Deploy)</h3>
+      <p>Just push to GitHub — Cloudflare deploys automatically:</p>
+      <pre>git add .
+git commit -m "Your change description"
+git push origin main</pre>
+
+      <h3>If You Used Option C (Standalone HTML)</h3>
+      <p>Re-bundle and re-upload:</p>
+      <ol>
+        <li>Recreate the bundled HTML file</li>
+        <li>Upload to Cloudflare Pages</li>
+      </ol>
+
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="step" style="background: #ecfdf5; border-left-color: #10b981;">
+      <h2 style="color: #047857;">✅ You're Done!</h2>
+      <p><strong>Your Horns & Heritage site is now live on Cloudflare.</strong></p>
+      <ul>
+        <li>✅ All assets load correctly</li>
+        <li>✅ Edits are tracked (in Git or EDIT_HISTORY.md)</li>
+        <li>✅ Future updates deploy automatically (if using GitHub)</li>
+        <li>✅ Your custom domain is connected (if applicable)</li>
+      </ul>
+      <p style="margin-top: 20px;"><strong>Next steps:</strong></p>
+      <ul>
+        <li>Connect a custom domain (e.g., horns-heritage.com) in Cloudflare DNS settings</li>
+        <li>Set up a CI/CD pipeline for automatic builds (if needed)</li>
+        <li>Monitor performance in Cloudflare Analytics</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

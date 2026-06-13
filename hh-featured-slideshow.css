@@ -1,0 +1,188 @@
+/* ============================================================
+   hh-featured-slideshow.css — "Featured Offers of the Month"
+   Horizontal slideshow that replaces the single Featured Bull
+   card. Occupies the SAME space: same .featured-bull section,
+   same container, same card radius/border/shadow as .fb-card.
+   Reuses existing design tokens only — no new colors or fonts.
+   Additive file: nothing else is modified.
+   ============================================================ */
+
+/* --- Shell: visually identical footprint to the old .fb-card --- */
+.fbs {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+/* --- Sliding track --- */
+.fbs-viewport { overflow: hidden; }
+.fbs-track {
+  display: flex;
+  align-items: stretch;
+  transition: transform 0.65s cubic-bezier(0.33, 1, 0.42, 1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fbs-track { transition: none; }
+}
+
+/* --- Slide: same 2-column grid as the original fb-card --- */
+.fbs-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+/* --- Media (left) — same proportions as .fb-media --- */
+.fbs-media {
+  position: relative;
+  align-self: stretch;
+  min-height: 320px;
+  overflow: hidden;
+}
+.fbs-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 4.5s ease-out;
+}
+/* subtle zoom on the ACTIVE slide's image */
+.fbs-slide.is-active .fbs-media img { transform: scale(1.07); }
+@media (prefers-reduced-motion: reduce) {
+  .fbs-media img, .fbs-slide.is-active .fbs-media img { transform: none; transition: none; }
+}
+
+/* tag chip on the image (reuses .fb-flag look via same class in markup) */
+
+/* --- Image overlay: price + View Details --- */
+.fbs-overlay {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 38px 18px 16px;
+  background: linear-gradient(to top, rgba(20, 16, 10, 0.72), rgba(20, 16, 10, 0));
+}
+.fbs-overlay-price {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  font-variant-numeric: tabular-nums;
+}
+.fbs-overlay-btn {
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.fbs-overlay-btn:hover { background: rgba(255, 255, 255, 0.28); transform: translateY(-1px); }
+
+/* --- Body (right) — same paddings as .fb-body --- */
+.fbs-body { padding: clamp(28px, 3.5vw, 48px) clamp(28px, 3.5vw, 52px) clamp(28px, 3.5vw, 48px) 0; }
+
+.fbs-badge-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fbs-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(45, 106, 79, 0.12);
+  color: var(--primary-green);
+}
+.fbs-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.fbs-status.is-reserved { background: rgba(181, 130, 47, 0.14); color: var(--gold-dark, #8a6a1f); }
+.fbs-status.is-sold { background: rgba(120, 60, 47, 0.12); color: var(--terracotta); }
+
+/* --- Dots --- */
+.fbs-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+.fbs-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--border-soft, #d8cfc2);
+  transition: width 0.25s ease, background 0.25s ease;
+}
+.fbs-dot.is-active {
+  width: 26px;
+  border-radius: 999px;
+  background: var(--primary-green);
+}
+
+/* --- Arrows --- */
+.fbs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary);
+  box-shadow: 0 6px 18px rgba(40, 30, 18, 0.16);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  opacity: 0.92;
+}
+.fbs-arrow:hover { transform: translateY(-50%) scale(1.07); opacity: 1; }
+.fbs-arrow svg { width: 20px; height: 20px; }
+.fbs-prev { left: 14px; }
+.fbs-next { right: 14px; }
+
+/* --- Empty / loading state --- */
+.fbs-empty {
+  padding: 64px 28px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* --- Responsive: mirror the original fb-card breakpoints --- */
+@media (max-width: 760px) {
+  .fbs-slide { grid-template-columns: 1fr; gap: 0; }
+  .fbs-media { min-height: 240px; }
+  .fbs-body { padding: 26px 26px 56px; }
+  .fbs-arrow { width: 38px; height: 38px; }
+  .fbs-prev { left: 8px; }
+  .fbs-next { right: 8px; }
+  .fbs-overlay-price { font-size: 1.05rem; }
+}

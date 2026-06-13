@@ -1,0 +1,105 @@
+/* ============================================================================
+   hh-bright.css  —  Bright / natural re-tone + cinematic cow-video backdrops
+   Loaded LAST so it wins. Two jobs:
+     1. Replace the heavy dark scrims/overlays with light, airy veils that keep
+        the brand palette (#2E7D32 / #8D6E63 / #F5F0E6 / #C8A951) but feel sunny.
+     2. Style the looping cow-video backdrops injected by hh-bright.js.
+   No content, prices, products or functional elements are touched.
+   ========================================================================== */
+
+/* ---- 1. HERO: drop the dark scrim, go light + readable ------------------- */
+/* Beat the dark hh-redesign variants (html[data-hero="N"] .hero-scrim) and the
+   mobile rgba(0,0,0,.4) !important rule with equal/greater specificity. */
+html section.hero .hero-scrim,
+html[data-hero] section.hero .hero-scrim,
+html[data-hero="1"] section.hero .hero-scrim,
+html[data-hero="2"] section.hero .hero-scrim,
+html[data-hero="3"] section.hero .hero-scrim {
+  background:
+    linear-gradient(180deg,
+      rgba(245,240,230,0.42) 0%,
+      rgba(245,240,230,0.30) 38%,
+      rgba(245,240,230,0.58) 78%,
+      rgba(245,240,230,0.74) 100%) !important;
+}
+@media (max-width: 900px) {
+  html section.hero .hero-scrim,
+  html[data-hero] section.hero .hero-scrim {
+    background:
+      linear-gradient(180deg,
+        rgba(245,240,230,0.52) 0%,
+        rgba(245,240,230,0.46) 50%,
+        rgba(245,240,230,0.72) 100%) !important;
+  }
+}
+
+/* Light fallback behind the hero video (was dark forest green) */
+html section.hero { background: var(--bg-alt, #F5F0E6) !important; }
+
+/* Hero text was cream (built for a dark scrim) — make it deep & readable on
+   the now-bright backdrop, with a soft light halo for safety over the video. */
+html section.hero .hero-center h1,
+html section.hero h1 {
+  color: #1f3d2b !important;
+  text-shadow:
+    0 1px 14px rgba(245,240,230,0.75),
+    0 1px 3px  rgba(245,240,230,0.95) !important;
+}
+html section.hero h1 em { color: #9d4a2c !important; }
+html section.hero .hero-center p,
+html section.hero p.lede {
+  color: #3a4a3f !important;
+  text-shadow: 0 1px 8px rgba(245,240,230,0.7) !important;
+}
+
+/* Safety: the entrance fade leaves hero content at opacity:0 at rest (and some
+   environments pause CSS animations on their first keyframe). Guarantee a
+   visible resting state — the hh-fade-up animation still plays as enhancement. */
+.hero .container > div > * { opacity: 1; }
+
+/* ---- 2. STORY (About) — keep its light scrim genuinely light ------------- */
+html .story .story-bg-scrim {
+  background: linear-gradient(180deg,
+    rgba(245,240,230,0.78) 0%,
+    rgba(245,240,230,0.55) 30%,
+    rgba(245,240,230,0.55) 64%,
+    rgba(245,240,230,0.86) 100%) !important;
+}
+/* never dim the story video in any theme */
+html .story .story-bg-video { opacity: 1 !important; filter: saturate(1.02) !important; }
+
+/* ---- 3. Cinematic cow-video backdrop (injected by hh-bright.js) ---------- */
+.hh-cowbg {
+  position: absolute; inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hh-cowbg video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Light parchment veil — bright, content stays fully legible, motion stays subtle */
+.hh-cowbg .hh-cowbg-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(245,240,230,0.90) 0%,
+    rgba(245,240,230,0.82) 22%,
+    rgba(245,240,230,0.80) 50%,
+    rgba(245,240,230,0.82) 78%,
+    rgba(245,240,230,0.90) 100%);
+}
+/* sections that received a cow backdrop */
+section.hh-has-cowbg {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--bg-alt, #F5F0E6) !important;
+}
+section.hh-has-cowbg > .container { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-cowbg video { display: none; }
+  .hh-cowbg .hh-cowbg-veil { background: rgba(245,240,230,0.86); }
+}
