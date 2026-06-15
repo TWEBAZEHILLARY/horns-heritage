@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Push Step-by-Step Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: 'Poppins', system-ui, sans-serif; 
+    background: linear-gradient(135deg, #3C6E54 0%, #5C7B66 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  
+  .header {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .header h1 { color: #3C6E54; font-size: 32px; margin-bottom: 8px; }
+  .header p { color: #5A615C; font-size: 16px; }
+  
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .step-container {
+    border-left: 4px solid #3C6E54;
+    padding: 24px;
+    margin-bottom: 20px;
+    background: #F4F5F2;
+    border-radius: 8px;
+  }
+  
+  .step-number {
+    display: inline-block;
+    background: #3C6E54;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  
+  .step-title {
+    color: #3C6E54;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  
+  .step-desc {
+    color: #5A615C;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+  
+  .command-block {
+    background: #1D211E;
+    color: #F4F7F3;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin: 16px 0;
+    overflow-x: auto;
+    line-height: 1.6;
+    border: 2px solid #3C6E54;
+  }
+  
+  .command-label {
+    color: #FFD23F;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .copy-btn {
+    background: #3C6E54;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  
+  .copy-btn:hover {
+    background: #2F5A43;
+    transform: translateY(-2px);
+  }
+  
+  .file-list {
+    background: #E3EBE4;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    color: #3C6E54;
+  }
+  
+  .file-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .file-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(60, 110, 84, 0.2);
+  }
+  
+  .file-list li::before {
+    content: "✓ ";
+    font-weight: bold;
+    color: #155724;
+    margin-right: 8px;
+  }
+  
+  .file-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .tab-btn {
+    padding: 10px 20px;
+    border: 2px solid #3C6E54;
+    background: white;
+    color: #3C6E54;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .tab-btn.active {
+    background: #3C6E54;
+    color: white;
+  }
+  
+  .tab-btn:hover {
+    background: #3C6E54;
+    color: white;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .note {
+    background: #FFF3CD;
+    border-left: 4px solid #FFB81C;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    color: #856404;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .success {
+    background: #D4EDDA;
+    border-left: 4px solid #155724;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    color: #155724;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+  
+  .progress-step {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: #E3EBE4;
+    border-radius: 8px;
+    color: #3C6E54;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  
+  .progress-step.done {
+    background: #D4EDDA;
+    color: #155724;
+  }
+  
+  .progress-step.current {
+    background: #3C6E54;
+    color: white;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📤 Git Push Step-by-Step</h1>
+    <p>Complete guide to merge with GitHub and enable CI/CD</p>
+  </div>
+  
+  <div class="card">
+    <h2 style="color: #3C6E54; margin-bottom: 20px;">Progress</h2>
+    <div class="progress">
+      <div class="progress-step done">1. Clone</div>
+      <div class="progress-step done">2. Copy Files</div>
+      <div class="progress-step current">3. Git Add</div>
+      <div class="progress-step">4. Commit</div>
+      <div class="progress-step">5. Push</div>
+      <div class="progress-step">6. Test</div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2 style="color: #3C6E54; margin-bottom: 20px;">Choose Your Operating System</h2>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('terminal')">Terminal/Command Line</button>
+      <button class="tab-btn" onclick="showTab('gui')">GitHub Desktop (GUI)</button>
+      <button class="tab-btn" onclick="showTab('web')">GitHub Web Interface</button>
+    </div>
+  </div>
+  
+  <!-- TERMINAL TAB -->
+  <div id="terminal" class="tab-content active">
+    <div class="card">
+      <h2 style="color: #3C6E54; margin-bottom: 20px;">Using Terminal/Command Line</h2>
+      
+      <div class="step-container">
+        <div class="step-number">1</div>
+        <div class="step-title">Clone Your Repository</div>
+        <div class="step-desc">Copy your GitHub repo to your computer</div>
+        <div class="command-block">
+          <span class="command-label">$ Run this command:</span>
+          git clone https://github.com/TWEBAZEHILLARY/horns-heritage.git
+          <button class="copy-btn" onclick="copyToClipboard('git clone https://github.com/TWEBAZEHILLARY/horns-heritage.git')">Copy</button>
+        </div>
+        <div class="step-desc">Then navigate into the folder:</div>
+        <div class="command-block">
+          <span class="command-label">$ Run this:</span>
+          cd horns-heritage
+          <button class="copy-btn" onclick="copyToClipboard('cd horns-heritage')">Copy</button>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">2</div>
+        <div class="step-title">Copy Files from Workspace</div>
+        <div class="step-desc">Copy these files/folders from your workspace into the cloned repository:</div>
+        <div class="file-list">
+          <ul>
+            <li>wrangler.toml</li>
+            <li>package.json</li>
+            <li>.gitignore</li>
+            <li>src/ (entire folder)</li>
+            <li>.github/ (entire folder)</li>
+            <li>public/ (entire folder)</li>
+            <li>assets/ (entire folder)</li>
+            <li>_ds/ (entire folder)</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>How to copy:</strong> Open File Manager/Finder and drag files from workspace into the horns-heritage folder you just created.
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">3</div>
+        <div class="step-title">Stage Files with Git</div>
+        <div class="step-desc">Tell Git to track all your changes:</div>
+        <div class="command-block">
+          <span class="command-label">$ Run this:</span>
+          git add .
+          <button class="copy-btn" onclick="copyToClipboard('git add .')">Copy</button>
+        </div>
+        <div class="step-desc" style="margin-top: 16px;">The dot (.) means "add all files"</div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">4</div>
+        <div class="step-title">Commit Changes</div>
+        <div class="step-desc">Save your changes with a message:</div>
+        <div class="command-block">
+          <span class="command-label">$ Run this:</span>
+          git commit -m "Merge: Add deployment configuration and CI/CD pipeline"
+          <button class="copy-btn" onclick="copyToClipboard('git commit -m \"Merge: Add deployment configuration and CI/CD pipeline\"')">Copy</button>
+        </div>
+        <div class="step-desc" style="margin-top: 16px;">The -m flag adds a commit message</div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">5</div>
+        <div class="step-title">Push to GitHub</div>
+        <div class="step-desc">Upload your changes to GitHub:</div>
+        <div class="command-block">
+          <span class="command-label">$ Run this:</span>
+          git push origin master
+          <button class="copy-btn" onclick="copyToClipboard('git push origin master')">Copy</button>
+        </div>
+        <div class="note" style="margin-top: 16px;">
+          <strong>Note:</strong> If you get an error saying "master doesn't exist", try: <code>git push origin main</code>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">6</div>
+        <div class="step-title">Verify on GitHub</div>
+        <div class="step-desc">Check that your files are now on GitHub:</div>
+        <ol style="margin-left: 20px; color: #5A615C;">
+          <li>Go to: <strong>https://github.com/TWEBAZEHILLARY/horns-heritage</strong></li>
+          <li>You should see wrangler.toml, package.json, src/, public/, .github/ at the root</li>
+          <li>If yes, ✅ push was successful!</li>
+        </ol>
+      </div>
+      
+      <div class="success" style="margin-top: 24px;">
+        <strong>✅ After pushing successfully, continue with:</strong><br>
+        1. Add GitHub secrets (CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID)<br>
+        2. Test by making a small change and pushing again
+      </div>
+    </div>
+  </div>
+  
+  <!-- GITHUB DESKTOP TAB -->
+  <div id="gui" class="tab-content">
+    <div class="card">
+      <h2 style="color: #3C6E54; margin-bottom: 20px;">Using GitHub Desktop (Easier!)</h2>
+      
+      <div class="step-container">
+        <div class="step-number">1</div>
+        <div class="step-title">Open GitHub Desktop</div>
+        <div class="step-desc">Download from: <strong>https://desktop.github.com/</strong></div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">2</div>
+        <div class="step-title">Clone Your Repo</div>
+        <div class="step-desc">
+          In GitHub Desktop:
+          <ol style="margin-left: 20px; margin-top: 8px; color: #5A615C;">
+            <li>Click "File" → "Clone Repository"</li>
+            <li>Select "TWEBAZEHILLARY/horns-heritage"</li>
+            <li>Choose where to save it</li>
+            <li>Click "Clone"</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">3</div>
+        <div class="step-title">Copy Files</div>
+        <div class="step-desc">
+          Manually copy files from workspace to the cloned folder:
+          <div class="file-list" style="margin-top: 12px;">
+            <ul>
+              <li>wrangler.toml</li>
+              <li>package.json</li>
+              <li>.gitignore</li>
+              <li>src/ folder</li>
+              <li>.github/ folder</li>
+              <li>public/ folder</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">4</div>
+        <div class="step-title">Commit in GitHub Desktop</div>
+        <div class="step-desc">
+          <ol style="margin-left: 20px; margin-top: 8px; color: #5A615C;">
+            <li>GitHub Desktop will detect changes automatically</li>
+            <li>In the "Changes" tab, you'll see all modified files</li>
+            <li>Enter commit message: "Merge: Add deployment configuration"</li>
+            <li>Click "Commit to master"</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">5</div>
+        <div class="step-title">Push to GitHub</div>
+        <div class="step-desc">
+          <ol style="margin-left: 20px; margin-top: 8px; color: #5A615C;">
+            <li>Click "Push origin" button (top right)</li>
+            <li>Wait for it to complete</li>
+            <li>Done! Files are on GitHub</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="success" style="margin-top: 24px;">
+        <strong>✅ GitHub Desktop makes it easy!</strong><br>
+        Much simpler than command line - visual and intuitive.
+      </div>
+    </div>
+  </div>
+  
+  <!-- WEB INTERFACE TAB -->
+  <div id="web" class="tab-content">
+    <div class="card">
+      <h2 style="color: #3C6E54; margin-bottom: 20px;">Using GitHub Web Interface</h2>
+      
+      <div class="step-container">
+        <div class="step-number">1</div>
+        <div class="step-title">Go to Your GitHub Repo</div>
+        <div class="step-desc">
+          Navigate to: <strong>https://github.com/TWEBAZEHILLARY/horns-heritage</strong>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">2</div>
+        <div class="step-title">Upload Files</div>
+        <div class="step-desc">
+          <ol style="margin-left: 20px; margin-top: 8px; color: #5A615C;">
+            <li>Click "Add file" → "Upload files"</li>
+            <li>Drag and drop these files:</li>
+          </ol>
+          <div class="file-list" style="margin-top: 12px;">
+            <ul>
+              <li>wrangler.toml</li>
+              <li>package.json</li>
+              <li>.gitignore</li>
+            </ul>
+          </div>
+          <ol style="margin-left: 20px; margin-top: 12px; color: #5A615C; counter-reset: list; list-style-position: inside;">
+            <li value="3">Click "Commit changes"</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">3</div>
+        <div class="step-title">Create Folders</div>
+        <div class="step-desc">
+          <ol style="margin-left: 20px; margin-top: 8px; color: #5A615C;">
+            <li>Click "Add file" → "Create new file"</li>
+            <li>Type path: <strong>src/index.js</strong></li>
+            <li>Paste the content from your workspace</li>
+            <li>Click "Commit new file"</li>
+            <li>Repeat for <strong>.github/workflows/deploy.yml</strong></li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="step-container">
+        <div class="step-number">4</div>
+        <div class="step-title">Upload Folders</div>
+        <div class="step-desc">
+          Repeat the "Upload files" process for:
+          <div class="file-list" style="margin-top: 12px;">
+            <ul>
+              <li>public/ (all files)</li>
+              <li>assets/ (all images)</li>
+              <li>_ds/ (all design system files)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="note">
+        <strong>⚠️ Note:</strong> Web interface is slower for many files. GitHub Desktop or Terminal is faster for bulk uploads.
+      </div>
+    </div>
+  </div>
+  
+  <!-- COMMON NEXT STEPS -->
+  <div class="card">
+    <h2 style="color: #3C6E54; margin-bottom: 20px;">After Pushing to GitHub</h2>
+    
+    <div class="step-container">
+      <div class="step-title">Step 1: Add GitHub Secrets</div>
+      <div class="step-desc">
+        Go to: <strong>https://github.com/TWEBAZEHILLARY/horns-heritage/settings/secrets/actions</strong>
+        <ol style="margin-left: 20px; margin-top: 12px; color: #5A615C;">
+          <li>Click "New repository secret"</li>
+          <li>Add CLOUDFLARE_API_TOKEN (your Cloudflare API token)</li>
+          <li>Click "Add secret"</li>
+          <li>Click "New repository secret" again</li>
+          <li>Add CLOUDFLARE_ACCOUNT_ID (your Cloudflare Account ID)</li>
+          <li>Click "Add secret"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="step-container">
+      <div class="step-title">Step 2: Test Deployment</div>
+      <div class="step-desc">
+        <ol style="margin-left: 20px; color: #5A615C;">
+          <li>Make a small change to a file (e.g., edit index.html)</li>
+          <li>Commit and push the change</li>
+          <li>Go to: <strong>https://github.com/TWEBAZEHILLARY/horns-heritage/actions</strong></li>
+          <li>Watch "Deploy to Cloudflare Workers" workflow run</li>
+          <li>Once ✅ green, visit: <strong>https://horns-heritage.workers.dev</strong></li>
+          <li>Your site is LIVE! 🎉</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(tabName) {
+  // Hide all tabs
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Remove active from all buttons
+  const buttons = document.querySelectorAll('.tab-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+  
+  // Highlight selected button
+  event.target.classList.add('active');
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Copied to clipboard!');
+  }).catch(() => {
+    alert('Failed to copy. Try again.');
+  });
+}
+</script>
+</body>
+</html>

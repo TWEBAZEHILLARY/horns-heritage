@@ -1,0 +1,13 @@
+{
+  "cloudflare": {
+    "apiToken": "hornandheritage",
+    "accountName": "hornsandheritage",
+    "domain": "hornsandheritage.com",
+    "mainSite": "hornsandheritage.com",
+    "dashboardSubdomain": "dashboard.hornsandheritage.com"
+  },
+  "files": {
+    "index": "index.html",
+    "dashboard": "Sales Dashboard.html"
+  }
+}

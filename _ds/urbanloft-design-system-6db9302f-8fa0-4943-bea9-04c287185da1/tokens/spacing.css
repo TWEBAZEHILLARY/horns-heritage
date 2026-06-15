@@ -1,0 +1,24 @@
+/* UrbanLoft — Spacing, radius & elevation tokens. Base unit 8px. */
+:root {
+  /* ---- Spacing scale ---- */
+  --space-xs: 4px;    /* inline icon gaps */
+  --space-sm: 8px;    /* tight component padding */
+  --space-md: 16px;   /* default padding */
+  --space-lg: 24px;   /* card padding */
+  --space-xl: 32px;   /* section gaps */
+  --space-2xl: 48px;  /* layout sections */
+  --space-3xl: 64px;  /* page-level spacing */
+
+  /* ---- Border radius ---- */
+  --radius-sm: 2px;       /* badges, small tags */
+  --radius-default: 4px;  /* buttons, cards, inputs */
+  --radius-md: 6px;       /* modals, dropdown panels */
+  --radius-lg: 8px;       /* large containers */
+  --radius-full: 9999px;  /* avatars, status indicators */
+
+  /* ---- Elevation (architectural, understated) ---- */
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);    /* buttons, chips */
+  --shadow-default: 0 1px 4px rgba(28, 25, 23, 0.06); /* cards, dropdowns */
+  --shadow-md: 0 4px 12px rgba(28, 25, 23, 0.08);   /* elevated cards */
+  --shadow-lg: 0 8px 24px rgba(28, 25, 23, 0.12);   /* modals, panels */
+}

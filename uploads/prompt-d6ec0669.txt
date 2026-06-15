@@ -1,0 +1,151 @@
+I need you to rebuild my complete e-commerce website for "Horns & Heritage — Omushana gw'Enkore", a Ugandan Ankole ranch. Use the existing website content I provided, but completely transform it according to the exact specifications below.
+
+MY CURRENT WEBSITE CONTENT:
+[PASTE YOUR ENTIRE HTML CODE HERE]
+
+CRITICAL CHANGE: COMPLETELY REMOVE ALL HONEY AND BEE-RELATED CONTENT
+- Remove the "Honey" / "Bees" menu item entirely from the navigation bar
+- Remove ALL honey products from the Shop page (Pure Raw Honey, Beekeeper's Selection, etc.)
+- Remove the "Bees" page entirely
+- Remove any bee/honey imagery, descriptions, pricing, and references throughout the entire website
+- There should be NO mention of honey, bees, or bee products anywhere on the final website
+
+RESPONSIVE DESIGN & BROWSER MEASUREMENTS (CRITICAL):
+- Use CSS Grid and Flexbox for all layouts
+- Set max-width: 1400px on main containers with margin: auto
+- Use viewport meta tag: <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+- Implement fluid typography using clamp() for font sizes: clamp(1rem, 2.5vw, 2rem)
+- Use relative units (rem, em, vw, vh, %) instead of fixed pixels for containers
+- Ensure all images have max-width: 100% and height: auto
+- Implement CSS Grid with auto-fit and minmax for product grids: grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))
+- Set proper breakpoints: Mobile: 320px-768px, Tablet: 768px-1024px, Desktop: 1024px-1400px
+- Ensure no horizontal scrollbar appears on any device
+- Test that all text remains readable and does not overflow containers
+- Use sticky positioning for navigation on scroll
+- Ensure touch targets (buttons, links) are minimum 44px on mobile
+- Implement proper spacing with consistent padding and margins
+
+ANIMATIONS & INTERACTIONS REQUIRED:
+- Smooth page transitions when navigating between sections (use scroll-behavior: smooth)
+- Fade-in animation when elements scroll into view (intersection observer or CSS animation with scroll-trigger)
+- Hover effects on all product cards: scale transform (1.02-1.05), box-shadow transition, border color change
+- Button hover animations: transform translateY(-2px), subtle box-shadow, background color transition
+- Loading animation for content when user changes pages/categories
+- Image gallery with smooth hover zoom effect on product images
+- Cart sidebar slide-in animation when opened
+- Modal popup animations (fade with scale) for login/signup
+- Form input focus effects: border glow, subtle scale
+- Menu bar background change on scroll (transparent to solid with backdrop-blur)
+- Mobile menu slide-in animation for hamburger menu
+
+TRANSFORMATION REQUIREMENTS:
+
+1. PAGE STRUCTURE & LAYOUT:
+   - The body of the website must start with "Uganda's Premier Ankole Ranch · Est. 2009"
+   - Remove ALL dark/upper information that appears above this text
+   - Remove the 3 social media icons from the first/hero page
+   - Add a sticky navigation bar that stays at top on scroll
+
+2. LOGIN/SIGNUP SYSTEM (CRITICAL):
+   - Before ANY client can purchase or buy any product, show a professional popup modal requiring login or signup
+   - Signup form must collect: First name, Last name/Company name, Phone number, Gender, Profile photo (optional), Email address (optional), Location (for delivery support)
+   - After successful login/signup, users can access purchases
+   - Each user must have their own account where their data and cart are stored under their credentials
+   - Add a logged-in account icon in the top right corner of every page that opens a user dropdown menu
+   - Add form validation with real-time feedback
+
+3. MENU BAR UPDATES:
+   - Add "About Us" to the menu bar - this must link to the last page showing contact information and address
+   - Change "Buy Cattle" menu item to "Buy/Sell Cattle"
+   - Remove "Honey"/"Bees" entirely from the menu
+   - Keep menu items: Shop, Buy/Sell Cattle, Butchery, Tours, Live Cams, Membership, About Us
+   - Add a mobile hamburger menu that transforms the nav links into a vertical drawer
+
+4. SHOP PAGE (linked from "Shop" menu):
+   - Show ONLY non-cattle, non-honey products (goat products, cow dairy products, beef products)
+   - Display products in a responsive grid: 4 columns on desktop, 2 on tablet, 1 on mobile (using auto-fit)
+   - Add product filtering by category (Dairy, Meat, Goat Products, Gift Boxes)
+   - Add price range filter slider
+   - Add sort by: price low-high, price high-low, popularity, newest
+   - Add search functionality on products
+   - Each product card must show: image, name, price in UGX, rating, short description, add to cart button
+   - Add wishlist heart icon on each product card
+
+5. BUY/SELL CATTLE PAGE (linked from "Buy/Sell Cattle" menu):
+   - Create a 2-selection responsive grid: COWS and GOATS (side by side on desktop, stacked on mobile)
+   - Under each, display: types (Ankole Longhorn, Ankole Cross, etc.), quantity input with + and - buttons
+   - Add livestock images for each type
+   - Add "Sell Your Cattle" section with WhatsApp button that opens pre-filled message for negotiations
+   - Include livestock health certificate badges
+
+6. BUTCHERY PAGE (linked from "Butchery" menu):
+   - Display descriptions of ALL beef cuts, offals, bones (mulokonyi), liver, ribs, etc. for BOTH cow and goat
+   - Create a two-column layout: Meat Cuts Guide (descriptions) on left, Quick Shop links on right
+   - Each cut description must have a "Buy Now" button that links to that specific product in the Shop page
+   - Add cooking tips icons and preparation suggestions for each cut
+   - Include a butcher's tips section with storage and preparation advice
+
+7. TOURS PAGE (linked from "Tours" menu):
+   - Replace the left photo gallery with a full-width responsive gallery
+   - Title it "The Ranch Experience"
+   - Show a grid gallery of multiple farm photos (minimum 6 images) with lightbox functionality
+   - ADD NEW SECTION: "BONFIRE & CULTURAL EXPERIENCES" with card layout:
+     - Bonfire Storytelling card: Description, best time (evenings), duration, booking button
+     - Bushera (Millet drink) Experience card: Tasting notes, cultural significance
+     - Enturire (Fermented millet with honey) card: Traditional preparation, health benefits
+     - Omulamba (Herbal Brew) card: Medicinal properties, ceremonial importance
+   - Add booking inquiry form for tour reservations
+   - Include a calendar widget for availability
+
+8. LIVE CAMS PAGE (linked from "Live Cams" menu):
+   - Create an embedded YouTube channel gallery using YouTube API or responsive iframes
+   - Display 3-4 featured farm videos in a grid
+   - Add channel subscribe button
+   - Include livestream status indicator if live
+
+9. MEMBERSHIP PAGE (linked from "Membership" menu):
+   - REMOVE all photos from this page
+   - Display ONLY the membership categories (Bronze, Silver, Gold, Premium)
+   - Use pricing card layout with features list and signup button
+   - Add a membership benefits comparison table
+   - Ensure the layout fits nicely with equal height cards
+
+10. ABOUT US PAGE (new page linked from menu):
+    - This should be the last page in navigation
+    - Display: Farm history, mission statement, our story
+    - Contact information: phone, email, physical address, Google Maps embed
+    - Business hours display
+    - Place the 3 social media icons (removed from first page) here with hover animations
+    - Add a contact form with name, email, message fields
+    - Include a "Meet Our Team" section with staff photos (placeholder images)
+
+ADDITIONAL REQUIREMENTS:
+- Implement localStorage or IndexedDB for persistent cart and user data
+- Add toast notifications for cart actions (item added, removed, purchased)
+- Implement lazy loading for all images for better performance
+- Add skeleton loading states while content loads
+- Ensure all forms have proper validation and error messages
+- Add keyboard navigation support (Tab, Enter, Escape for modals)
+- Implement ARIA labels for accessibility
+- Ensure minimum color contrast ratios for readability
+- Add a "Back to Top" button that appears after scrolling
+- Implement smooth scroll to top when clicking logo
+
+SUMMARY OF REMOVED CONTENT:
+- No honey products of any kind
+- No bees or beekeeping content
+- No "Bees" menu item or page
+
+SUMMARY OF ADDED CONTENT:
+- Bonfire and storytelling experiences on Tours page
+- Local traditional drinks (Bushera, Enturire, Omulamba) on Tours page
+
+DELIVERABLES:
+Provide complete, working HTML/CSS/JS code that implements ALL of the above. The site should be fully functional with:
+- Perfect responsive design across all device sizes
+- Smooth animations and transitions throughout
+- Working login/signup with user-specific cart persistence
+- Working product filtering, sorting, and search
+- All navigation links working correctly
+- No console errors
+- Mobile-first, touch-friendly interface

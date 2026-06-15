@@ -1,0 +1,27 @@
+/* UrbanLoft — Typography tokens */
+:root {
+  /* ---- Families ---- */
+  --font-headline: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* ---- Weights ---- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Type scale (size / line-height) ---- */
+  --type-display-size: 40px;   --type-display-lh: 1.15;  /* Space Grotesk bold */
+  --type-h1-size: 32px;        --type-h1-lh: 1.2;        /* Space Grotesk bold */
+  --type-h2-size: 24px;        --type-h2-lh: 1.25;       /* Space Grotesk semibold */
+  --type-h3-size: 20px;        --type-h3-lh: 1.3;        /* Space Grotesk semibold */
+  --type-h4-size: 16px;        --type-h4-lh: 1.35;       /* Space Grotesk medium */
+  --type-body-lg-size: 18px;   --type-body-lg-lh: 1.6;   /* Inter regular */
+  --type-body-size: 16px;      --type-body-lh: 1.6;      /* Inter regular */
+  --type-body-sm-size: 14px;   --type-body-sm-lh: 1.5;   /* Inter regular */
+  --type-caption-size: 12px;   --type-caption-lh: 1.4;   /* Inter medium */
+  --type-code-size: 14px;      --type-code-lh: 1.6;      /* JetBrains Mono regular */
+
+  --tracking-chip: 0.5px;      /* uppercase chip / label tracking */
+}

@@ -1,0 +1,15 @@
+{
+  "name": "horns-heritage",
+  "version": "1.0.0",
+  "description": "Horns & Heritage - Ankole Ranch Website",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "wrangler publish --env production",
+    "dev": "wrangler dev",
+    "preview": "wrangler preview --env production"
+  },
+  "dependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "devDependencies": {}
+}

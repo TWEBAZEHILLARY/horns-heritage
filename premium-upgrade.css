@@ -1,0 +1,316 @@
+/* ============================================================
+   Horns & Heritage — Premium visual upgrade ($10k brand layer)
+   PURELY ADDITIVE. No content, price, product, cart, login,
+   WhatsApp or unit logic is touched — this file only restyles.
+   Loaded AFTER the inline <style> so it wins on source order.
+   ============================================================ */
+
+:root {
+  /* ---- Premium type system ---- */
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ---- Refined surface tokens (cascade into inline var() usage too) ---- */
+  --border-soft: #e0ddd5;
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 18px 38px rgba(0, 0, 0, 0.12);
+
+  /* ---- Gold CTA accent ---- */
+  --gold-cta: #C8A951;
+  --gold-cta-dark: #B0892A;
+  --footer-green: #1A3B2B;
+}
+
+/* ============================================================
+   1 · TYPOGRAPHY  — Cormorant Garamond headings (600) / Open Sans body (400)
+   ============================================================ */
+body { font-family: var(--sans); font-weight: 400; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: 0; }
+
+/* Cormorant has a small x-height; nudge display + small headings up for presence */
+.hero h1 { line-height: 1.02; }
+.section-head h2 { line-height: 1.08; }
+.product-body h3 { font-size: 1.42rem; line-height: 1.15; }
+.tier h3 { font-size: 1.6rem; }
+.tour-card h3 { font-size: 1.7rem; }
+.tier .price-big, .price, .cart-total-row strong, .cart-head h3,
+.meta-row .meta strong, .hero-stats .stat strong { font-family: var(--serif); }
+.brand { font-family: var(--serif); font-weight: 600; }
+.tm-headline, .tm-name { font-weight: 600 !important; }
+.tm-name { font-size: 1.55rem; }
+
+/* ============================================================
+   2 · SPACING & RHYTHM  — ≥80px desktop sections, 40px mobile, roomy gutters
+   ============================================================ */
+.section { padding: clamp(80px, 9vw, 128px) 0; }
+.container { padding-left: clamp(24px, 5vw, 72px); padding-right: clamp(24px, 5vw, 72px); }
+.section-head { margin-bottom: clamp(44px, 5vw, 64px); }
+@media (max-width: 760px) {
+  .section { padding: 40px 0; }
+  .container { padding-left: 20px; padding-right: 20px; }
+}
+
+/* ============================================================
+   3 · PHOTOGRAPHIC GRADE  — warm, lightly faded VSCO film look
+   ============================================================ */
+.product-photo,
+.story-img img,
+.tour-card img,
+.hero-video,
+.cam-video-wrap video,
+#about-contact img,
+.cart-item-img img {
+  filter: saturate(0.88) contrast(1.03) brightness(1.02) sepia(0.10) hue-rotate(-6deg);
+}
+/* Keep the existing hover zoom, but preserve the graded look */
+.product-card:hover .product-photo {
+  filter: saturate(0.96) contrast(1.05) brightness(1.04) sepia(0.06);
+  transform: scale(1.06);
+}
+/* Tour cards already carry white text — deepen the protective gradient slightly */
+.tour-card::after {
+  background: linear-gradient(180deg, rgba(26,59,43,0) 12%, rgba(20,32,26,.55) 52%, rgba(15,24,19,.94) 100%) !important;
+}
+
+/* ============================================================
+   4 · CARD DESIGN  — 1px #e0ddd5 border · soft drop shadow · 12px radius
+   ============================================================ */
+.product-card, .tier {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.product-card:hover, .tier:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+  border-color: rgba(200, 169, 81, .55) !important;
+}
+.product-img { border-radius: 12px 12px 0 0; }
+
+/* Bring inline-styled content cards to the same 12px radius for consistency */
+#cattle-pricing, #cattle-sell, #cattle-health,
+#cams-live, #cams-youtube, #cams-follow,
+.tm-card { border-radius: 12px !important; }
+
+/* ============================================================
+   5 · BUTTONS  — gold #C8A951 primary, 0.2s transition, darken on hover
+   ============================================================ */
+.btn, .add-to-cart, .cart-checkout, .inquire-wa, .tab, .qbtn, .choose-tier {
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+/* Primary = gold */
+.btn-primary {
+  background: var(--gold-cta);
+  color: #3a2a16;
+}
+.btn-primary:hover {
+  background: var(--gold-cta-dark);
+  color: #3a2a16;
+  box-shadow: 0 8px 18px rgba(176, 137, 42, .34);
+}
+.add-to-cart, .cart-checkout {
+  background: var(--gold-cta) !important;
+  color: #3a2a16 !important;
+}
+.add-to-cart:hover, .cart-checkout:hover {
+  background: var(--gold-cta-dark) !important;
+  color: #3a2a16 !important;
+  box-shadow: 0 8px 18px rgba(176, 137, 42, .34) !important;
+}
+/* "Added ✓" success state stays green so it reads as confirmation */
+.add-to-cart.added {
+  background: var(--primary-green) !important;
+  color: var(--cream) !important;
+}
+
+/* Secondary = deep green, for clear two-tier hierarchy on light surfaces */
+.btn-secondary { background: var(--primary-green); color: var(--cream); }
+.btn-secondary:hover { background: #1B4D3E; color: var(--cream); box-shadow: 0 8px 18px rgba(45, 106, 79, .28); }
+
+/* On dark-green panels a green button would vanish — keep those gold so they pop */
+#cattle-sell .btn-secondary,
+#cams-follow .btn-secondary {
+  background: var(--gold-cta);
+  color: #3a2a16;
+}
+#cattle-sell .btn-secondary:hover,
+#cams-follow .btn-secondary:hover { background: var(--gold-cta-dark); color: #3a2a16; }
+
+/* Ghost buttons pick up a gold edge */
+.btn-ghost:hover { border-color: var(--gold-cta); color: var(--gold-cta-dark); }
+
+/* Touch-friendly tap targets everywhere */
+.btn, .add-to-cart, .cart-checkout, .inquire-wa, .tab { min-height: 44px; }
+
+/* ============================================================
+   6 · TRUST BAR  — thin white/gold bar just below the hero video
+   ============================================================ */
+.trust-bar {
+  background: #FFFFFF;
+  border-top: 2px solid var(--gold-cta);
+  border-bottom: 1px solid var(--border-soft);
+}
+.trust-bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 56px);
+  padding: 16px 0;
+  font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.trust-bar-inner span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  letter-spacing: 0.01em;
+}
+.trust-bar-inner span + span::before {
+  content: '';
+  position: absolute;
+  left: clamp(-9px, -2vw, -28px);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold-cta);
+}
+@media (max-width: 600px) {
+  .trust-bar-inner { gap: 14px 22px; }
+  .trust-bar-inner span + span::before { left: -13px; }
+}
+
+/* ============================================================
+   7 · SECTION DIVIDERS  — gold dotted line with centred leaf/diamond
+   ============================================================ */
+.hh-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 56px) clamp(24px, 5vw, 72px);
+}
+.hh-divider::before,
+.hh-divider::after {
+  content: '';
+  flex: 1;
+  max-width: 220px;
+  height: 0;
+  border-top: 2px dotted rgba(200, 169, 81, .6);
+}
+.hh-divider-leaf {
+  width: 11px; height: 11px;
+  background: var(--gold-cta);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 5px rgba(200, 169, 81, .14);
+}
+@media (max-width: 760px) { .hh-divider { padding-top: 8px; padding-bottom: 8px; } }
+
+/* ============================================================
+   8 · FOOTER  — three columns, dark green #1A3B2B, gold links
+   ============================================================ */
+footer.footer { background: var(--footer-green); padding: clamp(64px, 7vw, 88px) 0 32px; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.2fr 1.1fr;
+  gap: clamp(32px, 5vw, 64px);
+}
+.footer h4 {
+  color: var(--gold-cta);
+  font-size: 0.78rem;
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.footer a { color: var(--gold-cta); }
+.footer a:hover { color: #E6C871; }
+.f-links-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
+.f-cat {
+  display: block;
+  color: rgba(254, 243, 214, .5);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 14px 0 4px;
+}
+.f-cat:first-child { margin-top: 0; }
+.f-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.f-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid rgba(200, 169, 81, .4);
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+.f-social a::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold-cta);
+}
+.f-social a:hover { border-color: var(--gold-cta); background: rgba(200, 169, 81, .12); }
+.f-contact { color: rgba(254, 243, 214, .72); font-size: 0.88rem; line-height: 1.7; margin-bottom: 4px; }
+@media (max-width: 860px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+  .f-links-cols { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   9 · ANIMATION  — load fade (section by section) + slow idle hero zoom
+   ============================================================ */
+@keyframes hh-fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero .container > div > * {
+  opacity: 0;
+  animation: hh-fade-up .8s cubic-bezier(.2, .7, .2, 1) forwards;
+}
+.hero .eyebrow      { animation-delay: .10s; }
+.hero h1            { animation-delay: .22s; }
+.hero p.lede        { animation-delay: .34s; }
+.hero .hero-actions { animation-delay: .46s; }
+.hero .hero-stats   { animation-delay: .58s; }
+
+@keyframes hh-trust-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.trust-bar { opacity: 0; animation: hh-trust-in .7s ease forwards .7s; }
+
+/* Slow Ken-Burns idle zoom on the hero background video */
+@keyframes hh-hero-zoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.03); }
+}
+.hero-video {
+  transform-origin: center;
+  animation: hh-hero-zoom 24s ease-in-out 1s infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .container > div > *,
+  .trust-bar { opacity: 1; animation: none; transform: none; }
+  .hero-video { animation: none; }
+}

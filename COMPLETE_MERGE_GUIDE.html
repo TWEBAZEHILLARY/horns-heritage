@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Merge & CI/CD Setup Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: 'Poppins', system-ui, sans-serif; 
+    background: linear-gradient(135deg, #3C6E54 0%, #5C7B66 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  
+  .header {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .header h1 { color: #3C6E54; font-size: 36px; margin-bottom: 8px; }
+  .header .subtitle { color: #5A615C; font-size: 18px; margin-bottom: 16px; }
+  .status-badge {
+    display: inline-block;
+    background: #D4EDDA;
+    color: #155724;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .card h2 { color: #3C6E54; font-size: 24px; margin-bottom: 20px; }
+  .card h3 { color: #3C6E54; font-size: 18px; margin-top: 20px; margin-bottom: 12px; }
+  .card p { color: #5A615C; line-height: 1.6; margin-bottom: 12px; font-size: 15px; }
+  
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  
+  .phase {
+    background: #F4F5F2;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #3C6E54;
+    margin-bottom: 16px;
+  }
+  
+  .phase-number {
+    display: inline-block;
+    background: #3C6E54;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: bold;
+    margin-right: 12px;
+  }
+  
+  .phase h3 { margin-top: 0; display: flex; align-items: center; }
+  
+  .code-block {
+    background: #1D211E;
+    color: #F4F7F3;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin: 16px 0;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .checklist li {
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #F4F5F2;
+    border-radius: 6px;
+    border-left: 4px solid #3C6E54;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .checklist li::before {
+    content: "☐";
+    font-size: 18px;
+    color: #3C6E54;
+    font-weight: bold;
+  }
+  
+  .checklist li.done::before {
+    content: "✓";
+    color: #155724;
+  }
+  
+  .alert {
+    background: #D4EDDA;
+    border-left: 4px solid #155724;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    color: #155724;
+    font-size: 14px;
+  }
+  
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  
+  .timeline-step {
+    display: flex;
+    margin-bottom: 24px;
+  }
+  
+  .timeline-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #3C6E54;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-right: 20px;
+  }
+  
+  .timeline-content {
+    flex: 1;
+  }
+  
+  .timeline-content h3 { color: #3C6E54; margin-bottom: 8px; }
+  .timeline-content p { color: #5A615C; font-size: 14px; line-height: 1.5; }
+  
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #3C6E54;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    margin-top: 16px;
+  }
+  
+  .btn:hover {
+    background: #2F5A43;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .file-tree {
+    background: #1D211E;
+    color: #F4F7F3;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🚀 Complete GitHub Merge & CI/CD Setup</h1>
+    <p class="subtitle">Merge local changes with GitHub + Automatic Deployments</p>
+    <div class="status-badge">✅ READY TO IMPLEMENT</div>
+  </div>
+  
+  <div class="card">
+    <h2>📊 What's Happening</h2>
+    <div class="grid">
+      <div>
+        <h3>Current State</h3>
+        <ul class="checklist">
+          <li class="done">Local workspace fully configured</li>
+          <li class="done">All deployment files created</li>
+          <li class="done">Documentation complete</li>
+          <li>GitHub repo needs update</li>
+          <li>CI/CD pipeline needs setup</li>
+        </ul>
+      </div>
+      <div>
+        <h3>After This Guide</h3>
+        <ul class="checklist">
+          <li class="done">GitHub repo updated</li>
+          <li class="done">Files merged to root</li>
+          <li class="done">CI/CD configured</li>
+          <li class="done">Automatic deployments</li>
+          <li class="done">Ready for continuous updates</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>🎯 5-Step Process</h2>
+    
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="timeline-number">1</div>
+        <div class="timeline-content">
+          <h3>Get Cloudflare Credentials</h3>
+          <p>Retrieve your Account ID and API Token from Cloudflare dashboard (takes 2 minutes)</p>
+        </div>
+      </div>
+      
+      <div class="timeline-step">
+        <div class="timeline-number">2</div>
+        <div class="timeline-content">
+          <h3>Clone Your GitHub Repo</h3>
+          <p>Pull your horns-heritage repository locally</p>
+        </div>
+      </div>
+      
+      <div class="timeline-step">
+        <div class="timeline-number">3</div>
+        <div class="timeline-content">
+          <h3>Copy Files to Root</h3>
+          <p>Move files from project/ folder to root + add new deployment files</p>
+        </div>
+      </div>
+      
+      <div class="timeline-step">
+        <div class="timeline-number">4</div>
+        <div class="timeline-content">
+          <h3>Push to GitHub</h3>
+          <p>Commit and push the merged changes to your repository</p>
+        </div>
+      </div>
+      
+      <div class="timeline-step">
+        <div class="timeline-number">5</div>
+        <div class="timeline-content">
+          <h3>Configure GitHub Secrets + Test</h3>
+          <p>Add credentials to GitHub and test automatic deployment</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>Step 1: Get Cloudflare Credentials</h2>
+    
+    <div class="phase">
+      <h3><span class="phase-number">A</span>Get Your Account ID</h3>
+      <ol style="margin-left: 20px; color: #5A615C;">
+        <li>Go to https://dash.cloudflare.com/</li>
+        <li>Click your profile (top right)</li>
+        <li>Select "My Profile"</li>
+        <li>Click "API Tokens"</li>
+        <li><strong>Copy your Account ID</strong></li>
+      </ol>
+    </div>
+    
+    <div class="phase">
+      <h3><span class="phase-number">B</span>Create API Token</h3>
+      <ol style="margin-left: 20px; color: #5A615C;">
+        <li>Still in API Tokens page</li>
+        <li>Click "Create Token"</li>
+        <li>Select "Get started" next to "Create Custom Token"</li>
+        <li>Set permissions:
+          <ul style="margin-top: 8px;">
+            <li>Account > Cloudflare Workers > Edit</li>
+            <li>Account > Cloudflare Workers Scripts > Edit</li>
+          </ul>
+        </li>
+        <li>Select "All accounts"</li>
+        <li>Click "Create Token"</li>
+        <li><strong>Copy the token immediately</strong> (only shown once)</li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>Step 2 & 3: Clone Repo & Copy Files</h2>
+    
+    <div class="phase">
+      <h3>Run These Commands</h3>
+      <div class="code-block"># Clone your repository
+git clone https://github.com/TWEBAZEHILLARY/horns-heritage.git
+cd horns-heritage
+
+# Copy files from this workspace
+# (Manually copy these files/folders to the repo directory)
+# - wrangler.toml
+# - package.json
+# - .gitignore
+# - src/index.js
+# - .github/workflows/deploy.yml
+# - public/* (everything in public folder)
+# - assets/* (everything in assets folder)
+# - _ds/* (everything in _ds folder)</div>
+    </div>
+    
+    <div class="alert">
+      <strong>💡 Tip:</strong> The easiest way is to copy files using your file manager or drag-and-drop into the cloned directory.
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>Step 4: Push to GitHub</h2>
+    
+    <div class="code-block"># Stage all changes
+git add .
+
+# Commit the merge
+git commit -m "Merge: Add deployment configuration and move files to root
+
+- Move all project files to repository root
+- Add wrangler.toml for Cloudflare Workers
+- Add GitHub Actions CI/CD workflow
+- Add comprehensive deployment documentation
+- All static files organized in public/ folder"
+
+# Push to GitHub
+git push origin master</div>
+    
+    <div class="alert">
+      <strong>✓ Success:</strong> Your files are now on GitHub at the root level!
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>Step 5: GitHub Secrets & Testing</h2>
+    
+    <div class="phase">
+      <h3>Add GitHub Secrets</h3>
+      <ol style="margin-left: 20px; color: #5A615C;">
+        <li>Go to https://github.com/TWEBAZEHILLARY/horns-heritage/settings/secrets/actions</li>
+        <li>Click "New repository secret"</li>
+        <li>Create secret 1:
+          <ul style="margin-top: 8px;">
+            <li><strong>Name:</strong> <code style="background: #f0f0f0; padding: 2px 6px;">CLOUDFLARE_API_TOKEN</code></li>
+            <li><strong>Value:</strong> Paste your API token</li>
+            <li>Click "Add secret"</li>
+          </ul>
+        </li>
+        <li>Create secret 2:
+          <ul style="margin-top: 8px;">
+            <li><strong>Name:</strong> <code style="background: #f0f0f0; padding: 2px 6px;">CLOUDFLARE_ACCOUNT_ID</code></li>
+            <li><strong>Value:</strong> Paste your Account ID</li>
+            <li>Click "Add secret"</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+    
+    <div class="phase">
+      <h3>Test Deployment</h3>
+      <ol style="margin-left: 20px; color: #5A615C;">
+        <li>Make a small change (e.g., add a comment to index.html)</li>
+        <li>Run:
+          <div class="code-block">git add .
+git commit -m "Test: Verify CI/CD pipeline"
+git push origin master</div>
+        </li>
+        <li>Go to https://github.com/TWEBAZEHILLARY/horns-heritage/actions</li>
+        <li>Watch "Deploy to Cloudflare Workers" workflow run</li>
+        <li>Once ✅ green, visit https://horns-heritage.workers.dev/</li>
+        <li>Your changes are LIVE! 🎉</li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>📁 Final Repository Structure</h2>
+    <div class="file-tree">
+horns-heritage/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── src/
+│   └── index.js
+├── public/
+│   ├── index.html
+│   ├── hh-enhance.css
+│   ├── hh-redesign.css
+│   ├── hh-discover.css
+│   ├── tilt-3d.css
+│   ├── app.js
+│   ├── styles.css
+│   ├── assets/
+│   │   ├── (all images)
+│   │   └── (all videos)
+│   └── _ds/
+│       ├── urbanloft-design-system/
+│       └── flip7-design-system/
+├── wrangler.toml
+├── package.json
+├── .gitignore
+├── README.md
+└── (Documentation files)
+    </div>
+  </div>
+  
+  <div class="card" style="background: linear-gradient(135deg, #3C6E54 0%, #5C7B66 100%); color: white;">
+    <h2 style="color: white;">✨ After Setup Complete</h2>
+    
+    <h3 style="color: white; margin-top: 0;">Your New Workflow:</h3>
+    <ol style="margin-left: 20px; color: rgba(255,255,255,0.9);">
+      <li>Make changes to your files</li>
+      <li>Run: <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px;">git push origin master</code></li>
+      <li>GitHub Actions automatically deploys</li>
+      <li>Site is LIVE on Cloudflare Workers</li>
+    </ol>
+    
+    <p style="color: rgba(255,255,255,0.9); margin-top: 20px; font-size: 14px;">
+      <strong>No more manual deployments!</strong> Every push is automatically live.
+    </p>
+  </div>
+  
+  <div class="card">
+    <h2>📚 Documentation Files Created</h2>
+    <div class="grid">
+      <div>
+        <h3>Setup Guides</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">CI_CD_SETUP_GUIDE.md</li>
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">CI_CD_VISUAL_GUIDE.html</li>
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">GITHUB_MERGE_GUIDE.md</li>
+          <li style="padding: 8px 0;">DEPLOYMENT_GUIDE.md</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Quick Reference</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">QUICK_REFERENCE.md</li>
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">README_DEPLOYMENT.md</li>
+          <li style="padding: 8px 0; border-bottom: 1px solid #E6E8E4;">FINAL_SUMMARY.html</li>
+          <li style="padding: 8px 0;">WRANGLER_FIX_SUMMARY.md</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="alert">
+    <strong>⏱️ Total Time:</strong> ~30 minutes  
+    <strong>Difficulty:</strong> Easy  
+    <strong>Result:</strong> Fully automated deployment pipeline
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+/* UrbanLoft — Color tokens
+   Monochromatic charcoal + concrete foundation, precise blue accent. */
+:root {
+  /* ---- Base palette ---- */
+  --color-charcoal: #1C1917;      /* primary actions, strong headers */
+  --color-charcoal-hover: #0C0A09; /* primary hover */
+  --color-stone-700: #44403C;
+  --color-stone-600: #57534E;     /* ghost text, helper text */
+  --color-concrete: #9CA3AF;      /* secondary text, borders */
+  --color-stone-300: #D6D3D1;     /* control borders */
+  --color-stone-200: #E7E5E4;     /* card / input borders */
+  --color-stone-100: #F5F5F4;     /* ghost hover, disabled fill */
+  --color-stone-50:  #FAFAFA;     /* page background */
+  --color-white:     #FFFFFF;     /* surfaces */
+
+  --color-accent:       #2563EB;  /* links, CTAs, highlights */
+  --color-accent-hover: #1D4ED8;
+
+  /* ---- Semantic status ---- */
+  --color-success: #16A34A;   /* available, active lease */
+  --color-warning: #D97706;   /* pending, under review */
+  --color-error:   #DC2626;   /* off-market, errors */
+  --color-info:    #2563EB;   /* featured, new development */
+
+  /* status tint fills (15% over white) */
+  --color-success-tint: #16A34A26;
+  --color-warning-tint: #D9770626;
+  --color-error-tint:   #DC262626;
+  --color-info-tint:    #2563EB26;
+
+  /* ---- Semantic aliases ---- */
+  --bg-page:        var(--color-stone-50);
+  --surface-card:   var(--color-white);
+  --surface-dark:   var(--color-charcoal);
+
+  --text-strong:    var(--color-charcoal);
+  --text-body:      var(--color-stone-700);
+  --text-muted:     var(--color-stone-600);
+  --text-secondary: var(--color-concrete);
+  --text-on-dark:   var(--color-stone-50);
+  --text-link:      var(--color-accent);
+
+  --border-default: var(--color-stone-200);
+  --border-strong:  var(--color-charcoal);
+  --border-control: var(--color-stone-300);
+  --divider:        var(--color-stone-100);
+
+  --focus-ring:     #1C191718;  /* 3px charcoal ring */
+  --error-ring:     #DC262618;
+}

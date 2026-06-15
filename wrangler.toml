@@ -1,0 +1,12 @@
+name = "horns-heritage"
+main = "src/index.js"
+compatibility_date = "2026-06-15"
+
+[env.production]
+routes = [
+  { pattern = "hornsandheritage.com", zone_name = "hornsandheritage.com" },
+  { pattern = "dashboard.hornsandheritage.com", zone_name = "hornsandheritage.com" }
+]
+
+[build]
+command = "npm install"

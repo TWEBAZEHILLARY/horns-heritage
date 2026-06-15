@@ -1,0 +1,203 @@
+/* ============================================================================
+   hh-beauty-2026.css  —  "Clean / Beauty" re-skin layer
+   ----------------------------------------------------------------------------
+   Inspired by the clean, light, minimal beauty-commerce reference: cooler
+   off-white surfaces, crisp photography, airy spacing, brand colours kept as
+   ACCENTS only (Forest Green #2D6A4F · Gold #C8A951 · Terracotta · Cream).
+
+   SAFETY / RECOVERABILITY
+   - EVERY rule is gated under  html[data-hh-skin="beauty"]  so the entire
+     layer can be switched off (Tweaks ▸ "Clean redesign") or removed by
+     deleting this <link> — the previous look returns untouched.
+   - Loaded LAST (after hh-bright.css) so it wins on source order; the gate
+     selector also out-specifies the :root / .class rules it refines.
+   - NO content, prices, products, cart, checkout, login, WhatsApp, units or
+     functional markup is touched. Visual only.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1 · PALETTE  — re-token to cooler, lighter, more minimal surfaces.
+   These cascade automatically into every existing var() usage on the site.
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] {
+  --bg-main:        #F9F8F6;   /* cool off-white page background           */
+  --bg-secondary:   #F3F1EC;   /* faint warm-grey section bands            */
+  --bg-alt:         #EFECE6;
+  --bg-card:        #FFFFFF;   /* pure-white cards                         */
+
+  --text-primary:   #2C2B28;   /* near-black, softened                     */
+  --text-secondary: #6B6A66;   /* warm grey                                */
+  --text-muted:     #9A968E;
+
+  --border-soft:    #EAE5DD;   /* hairline card borders                    */
+  --shadow-card:        0 4px 14px rgba(31, 30, 28, 0.05);
+  --shadow-card-hover:  0 14px 32px rgba(31, 30, 28, 0.10);
+  --shadow-dropdown:    0 10px 28px rgba(31, 30, 28, 0.10);
+
+  /* keep accents exactly on-brand */
+  --gold:       #C8A951;
+  --gold-dark:  #B0892A;
+  --gold-cta:   #C8A951;
+  --gold-cta-dark: #B0892A;
+}
+
+html[data-hh-skin="beauty"] body { background: var(--bg-main); }
+
+/* ---------------------------------------------------------------------------
+   2 · PHOTOGRAPHY  — clear & true. Removes the muted sepia "film grade" so
+   product, story, tour and cam imagery reads crisp and bright.
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] .product-photo,
+html[data-hh-skin="beauty"] .story-img img,
+html[data-hh-skin="beauty"] .tour-card img,
+html[data-hh-skin="beauty"] .cam-video-wrap video,
+html[data-hh-skin="beauty"] #about-contact img,
+html[data-hh-skin="beauty"] .cart-item-img img,
+html[data-hh-skin="beauty"] .fb-card img {
+  filter: saturate(1.03) contrast(1.02) brightness(1.02);
+}
+/* Hover keeps the gentle zoom but stays crisp (no re-muting) */
+html[data-hh-skin="beauty"] .product-card:hover .product-photo {
+  filter: saturate(1.06) contrast(1.03) brightness(1.04);
+  transform: scale(1.05);
+}
+/* Crisper rendering on scaled photos */
+html[data-hh-skin="beauty"] .product-photo { image-rendering: auto; }
+
+/* ---------------------------------------------------------------------------
+   3 · CARDS  — minimal: hairline border, very soft shadow, 12px radius.
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] .product-card,
+html[data-hh-skin="beauty"] .tier {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+html[data-hh-skin="beauty"] .product-card:hover,
+html[data-hh-skin="beauty"] .tier:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(200, 169, 81, .50);
+}
+html[data-hh-skin="beauty"] .product-img { border-radius: 12px 12px 0 0; }
+/* a touch more breathing room inside cards */
+html[data-hh-skin="beauty"] .product-body { padding: 18px 20px 22px; }
+
+/* Category tags → cleaner, lighter pills (colours kept as brand accents) */
+html[data-hh-skin="beauty"] .product-img .tag {
+  top: 12px; left: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 8px rgba(31, 30, 28, 0.14);
+  backdrop-filter: saturate(1.1);
+}
+
+/* Product title — readable near-black instead of green for a cleaner grid;
+   green stays the accent on prices / CTAs. */
+html[data-hh-skin="beauty"] .product-body h3 { color: var(--text-primary); }
+html[data-hh-skin="beauty"] .price { color: var(--gold-cta-dark); }
+
+/* ---------------------------------------------------------------------------
+   4 · SHOP TABS  — pill filter row, refined to read as a clean filter bar.
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] #shop-tabs.tabs { gap: 10px; margin-bottom: 22px; }
+html[data-hh-skin="beauty"] #shop-tabs .tab {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  font-weight: 600;
+}
+html[data-hh-skin="beauty"] #shop-tabs .tab:hover {
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
+html[data-hh-skin="beauty"] #shop-tabs .tab.active {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   5 · SHOP TOOLBAR  — result count (left) + Sort dropdown (right).
+   Markup injected by hh-beauty-2026.js, styled here.
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] .hh-shop-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-soft);
+}
+html[data-hh-skin="beauty"] .hh-result-count {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+html[data-hh-skin="beauty"] .hh-result-count strong {
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-weight: 600;
+}
+html[data-hh-skin="beauty"] .hh-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+html[data-hh-skin="beauty"] .hh-sort > span { white-space: nowrap; }
+html[data-hh-skin="beauty"] .hh-sort select {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 10px 38px 10px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5L6 6.5L11 1.5' fill='none' stroke='%236B6A66' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+html[data-hh-skin="beauty"] .hh-sort select:hover { border-color: var(--gold-cta); }
+html[data-hh-skin="beauty"] .hh-sort select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, .14);
+}
+@media (max-width: 560px) {
+  html[data-hh-skin="beauty"] .hh-shop-toolbar { gap: 12px; }
+  html[data-hh-skin="beauty"] .hh-sort { width: 100%; justify-content: space-between; }
+  html[data-hh-skin="beauty"] .hh-sort select { flex: 1; }
+}
+
+/* ---------------------------------------------------------------------------
+   6 · SECTION HEADERS  — calmer eyebrow + cleaner divider for the minimal look
+   --------------------------------------------------------------------------- */
+html[data-hh-skin="beauty"] .section-head h2 { letter-spacing: -0.01em; }
+html[data-hh-skin="beauty"] .hh-divider::before,
+html[data-hh-skin="beauty"] .hh-divider::after {
+  border-top: 1px dotted rgba(200, 169, 81, .5);
+}
+
+/* Membership featured tier — softer, cleaner emphasis */
+html[data-hh-skin="beauty"] .tier.featured {
+  border-color: var(--gold-cta);
+  box-shadow: 0 8px 24px rgba(200, 169, 81, .16);
+}
+
+/* Trust strip & bands inherit the new tokens automatically; just ensure the
+   thin trust bar sits crisp on the cooler background. */
+html[data-hh-skin="beauty"] .trust-bar { border-top-color: var(--gold-cta); }
